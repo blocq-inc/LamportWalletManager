@@ -1,0 +1,3 @@
+# Lamport Wallet Manager
+
+This repo contains code for managing keys and interacting with our Lamport Contract Wallets. The point is to bundle all the code needed to interact with the contract wallets in one place. This is important for when we want to build multiple UIs for interacting with the wallets. Currently this repo is in use by our CLI. It will be used with our web app, and the React Native app we plan to build.
