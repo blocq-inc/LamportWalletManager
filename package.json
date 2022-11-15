@@ -1,0 +1,21 @@
+{
+  "name": "lamportwalletmanager",
+  "version": "0.0.5",
+  "description": "",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "ethers": "^5.7.2",
+    "freshpauligroup": "^1.0.11"
+  }
+}
