@@ -5,7 +5,8 @@ import * as _factoryabi from './abi/factoryabi.json'
 import * as _walletabi from './abi/walletabi.json'
 import * as _erc20abi from './abi/erc20abi.json'
 import * as _erc721abi from './abi/erc721abi.json'
-import { LamportKeyPair, hash_b, KeyPair, mk_key_pair, sign_hash, verify_signed_hash, PubPair } from 'freshpauligroup'
+import { LamportKeyPair, KeyPair, } from './types'
+import { hash_b, mk_key_pair, sign_hash, verify_signed_hash, } from './functions'
 
 const supportedBlockchains = _supportedBlockchains.default
 const factoryabi = _factoryabi.default

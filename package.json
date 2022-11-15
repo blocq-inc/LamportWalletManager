@@ -1,6 +1,6 @@
 {
   "name": "lamportwalletmanager",
-  "version": "0.0.5",
+  "version": "0.0.8",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",
@@ -15,7 +15,7 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "ethers": "^5.7.2",
-    "freshpauligroup": "^1.0.11"
+    "bignumber.js": "^9.1.0",
+    "ethers": "^5.7.2"
   }
 }
