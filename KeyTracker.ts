@@ -1,5 +1,4 @@
 import { ethers } from 'ethers'
-// import { hash_b, mk_key_pair, RandPair, PubPair, LamportKeyPair } from "freshpauligroup"
 import {  RandPair, PubPair, LamportKeyPair } from "./types"
 import { hash_b, mk_key_pair } from "./functions"
 
