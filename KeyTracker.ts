@@ -52,18 +52,18 @@ export default class KeyTracker {
     //     fs.writeFileSync(`keys/${this.name}.json`, s)
     // }
 
-    /**
-     * load
-     * @author William Doyle
-     * @description loads a key tracker from disk, and returns it
-     * @param name the name of the key tracker to load
-     */
-    static load(name: string): KeyTracker {
-        const fs = require('fs');
-        const s = fs.readFileSync(`keys/${name}.json`, 'utf8')
-        const rval = new KeyTracker()
-        return Object.assign(rval, JSON.parse(s))
-    }
+    // /**
+    //  * load
+    //  * @author William Doyle
+    //  * @description loads a key tracker from disk, and returns it
+    //  * @param name the name of the key tracker to load
+    //  */
+    // static load(name: string): KeyTracker {
+    //     const fs = require('fs');
+    //     const s = fs.readFileSync(`keys/${name}.json`, 'utf8')
+    //     const rval = new KeyTracker()
+    //     return Object.assign(rval, JSON.parse(s))
+    // }
 
     /**
      * getNextKeyPair
