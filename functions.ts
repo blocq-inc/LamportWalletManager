@@ -2,7 +2,7 @@
 import { ethers } from 'ethers'
 import BigNumber from "bignumber.js"
 import { LamportKeyPair, RandPair, PubPair, KeyPair, Sig } from './types'
-import { randomBytes } from 'crypto'
+// import { randomBytes } from 'crypto'
 
 export function unzipN<Type>(arr: Type[][]): Type[][] {
     if (arr.length === 0)
@@ -92,7 +92,8 @@ export function verify_signed_hash(hmsg: string, sig: Sig, pub: PubPair[]): bool
  * @returns a random lamport key pair
  */
 export function mk_key_pair(): KeyPair {
-    const mk_rand_num = () => hash(randomBytes(32).toString('hex')).substring(2) // hash the random number once to get the private key (then forget the original random number) and twice to get the public key... this helps if there is an issue with the random number generator
+    // const mk_rand_num = () => hash(randomBytes(32).toString('hex')).substring(2) // hash the random number once to get the private key (then forget the original random number) and twice to get the public key... this helps if there is an issue with the random number generator
+    const mk_rand_num = () => hash(ethers.BigNumber.from(ethers.utils.randomBytes(32)).toHexString()).substring(2)
     const mk_RandPair = () => ([mk_rand_num(), mk_rand_num()] as RandPair)
     const mk_pri_key = () => Array.from({ length: 256 }, () => mk_RandPair()) as RandPair[]
 
