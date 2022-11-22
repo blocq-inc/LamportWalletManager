@@ -1,18 +1,18 @@
 import { ethers } from 'ethers'
 import KeyTracker from './KeyTracker'
-import * as _supportedBlockchains from './supportedBlockchains.json'
-import * as _factoryabi from './abi/factoryabi.json'
-import * as _walletabi from './abi/walletabi.json'
-import * as _erc20abi from './abi/erc20abi.json'
-import * as _erc721abi from './abi/erc721abi.json'
-import { LamportKeyPair, KeyPair, } from './types'
+import supportedBlockchains from './supportedBlockchains.json'
+import factoryabi from './abi/factoryabi.json'
+import walletabi from './abi/walletabi.json'
+import erc20abi from './abi/erc20abi.json'
+import erc721abi from './abi/erc721abi.json'
+import { LamportKeyPair, KeyPair, PubPair} from './types'
 import { hash_b, mk_key_pair, sign_hash, verify_signed_hash, } from './functions'
 
-const supportedBlockchains = _supportedBlockchains.default
-const factoryabi = _factoryabi.default
-const walletabi = _walletabi.default
-const erc20abi = _erc20abi.default
-const erc721abi = _erc721abi.default
+// const supportedBlockchains = _supportedBlockchains.default
+// const factoryabi = _factoryabi.default
+// const walletabi = _walletabi.default
+// const erc20abi = _erc20abi.default
+// const erc721abi = _erc721abi.default
 
 export type TokenInfo = {
     tokenId: string
@@ -122,7 +122,12 @@ export default class LamportWalletManager {
             rpc,
             chainid,
             price
-        } = supportedBlockchains.find((bc: any) => bc.name === blockchain)
+        } = (() => {
+            const rval = supportedBlockchains.find((bc: any) => bc.name === blockchain)
+            if (!rval)
+                throw new Error(`buyNew:: Unsupported Blockchain ${blockchain}`)
+            return rval
+        })()
 
         const provider = ethers.getDefaultProvider(rpc)
         const gasWallet = new ethers.Wallet(gasPrivateKey, provider)
@@ -466,7 +471,7 @@ export default class LamportWalletManager {
         const name = await currency.name()
         const symbol = await currency.symbol()
         const balance: string = await currency.balanceOf(this.state.walletAddress)
-        return [name, symbol, balance]
+        return [name, symbol, balance.toString()]
     }
 
     /**
@@ -605,4 +610,13 @@ export default class LamportWalletManager {
         return  this.call_execute(address, 'transfer(address,uint256)', [this.nameOrAddressToAddress(to), amount], erc20abi)
     }
 
+    /**
+     *  @name chainName
+     *  @description get the name of the connected chain
+     *  @date November 22nd 2022
+     *  @author William Doyle
+     */
+    get chainName () {
+        return supportedBlockchains.find(bchin => bchin.chainid === this.state.chainId)?.name
+    }
 }
