@@ -105,6 +105,7 @@ type State = {
     backup_keys: KeyPair[]
     nft_contracts: string[]
     friends: Friend[]
+    tx_hashes: string[]
 }
 
 /**
@@ -114,8 +115,8 @@ type State = {
  * @date November 1st 2022
  */
 export default class LamportWalletManager {
-    state: State = {} as State  
-    gasPayer : ethers.Signer | null = null
+    state: State = {} as State
+    gasPayer: ethers.Signer | null = null
 
     /**
      * @name getGasPayer
@@ -128,7 +129,7 @@ export default class LamportWalletManager {
             const provider = ethers.getDefaultProvider(this.state.network_provider_url)
             return new ethers.Wallet(this.state.eoa_gas_pri, provider)
         }
-        
+
         if (this.gasPayer)
             return this.gasPayer
 
@@ -141,7 +142,7 @@ export default class LamportWalletManager {
      *  @date November 23rd 2022
      *  @author William Doyle
      */
-    setGasPayer(gasPayer : ethers.Signer) {
+    setGasPayer(gasPayer: ethers.Signer) {
         this.gasPayer = gasPayer
     }
 
@@ -328,6 +329,7 @@ export default class LamportWalletManager {
             throw new Error(`Invalid Lamport Signature`)
 
         const tx = await lamportwallet.recover(k2.pkh, recoveryKeyPair.pub, sig.map(s => `0x${s}`))
+        this.state.tx_hashes.push(tx.hash)
         this.state.kt = k2
 
         return async () => {
@@ -365,6 +367,7 @@ export default class LamportWalletManager {
         const lamportwallet: ethers.Contract = new ethers.Contract(this.state.walletAddress, walletabi, gasWallet)
 
         const tx = await lamportwallet.setTenRecoveryPKHs(tenPKHs, current_keys.pub, sig.map(s => `0x${s}`), nextpkh)
+        this.state.tx_hashes.push(tx.hash)
 
         this.state.backup_keys = tenKeys
         return async () => {
@@ -386,6 +389,9 @@ export default class LamportWalletManager {
         const lamportwallet: ethers.Contract = new ethers.Contract(this.state.walletAddress, walletabi, gasWallet)
 
         const tx = await lamportwallet.execute(...buildExecuteArguments(this.state.kt, fsig, abi, contractAddress, args))
+
+        this.state.tx_hashes.push(tx.hash)
+
         return async () => {
             const provider = ethers.getDefaultProvider(this.state.network_provider_url)
             return await provider.waitForTransaction(tx.hash)
@@ -423,6 +429,8 @@ export default class LamportWalletManager {
             nextpkh,
             sig.map(s => `0x${s}`),
         )
+
+        this.state.tx_hashes.push(tx.hash)
 
         return async () => {
             const provider = ethers.getDefaultProvider(this.state.network_provider_url)
@@ -689,5 +697,17 @@ export default class LamportWalletManager {
      */
     get chainName() {
         return supportedBlockchains.find(bchin => bchin.chainid === this.state.chainId)?.name
+    }
+
+    /**
+     * @name topTxHash
+     * @description get the hash of the most recent transaction
+     * @date November 24th 2022
+     * @author William Doyle
+     */
+    get topTxHash() :  string | null {
+        if (this.state.tx_hashes.length === 0)
+            return null
+        return this.state.tx_hashes[this.state.tx_hashes.length - 1]
     }
 }
