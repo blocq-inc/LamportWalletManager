@@ -8,26 +8,35 @@ import erc721abi from './abi/erc721abi.json'
 import { LamportKeyPair, KeyPair, PubPair } from './types'
 import { hash_b, mk_key_pair, sign_hash, verify_signed_hash, } from './functions'
 
-// const supportedBlockchains = _supportedBlockchains.default
-// const factoryabi = _factoryabi.default
-// const walletabi = _walletabi.default
-// const erc20abi = _erc20abi.default
-// const erc721abi = _erc721abi.default
-
+/**
+ * @name TokenInfo
+ * @description A type to hold an NFT's token id and uri
+ */
 export type TokenInfo = {
     tokenId: string
     tokenURI: string
 }
 
+/**
+ * @name Friend
+ * @description A named alias for an EVM address
+ */
 type Friend = {
     address: string
     name: string
 }
 
+/**
+ * @name WaiterCallback
+ * @description used to track the progress of a transaction
+ */
 export type WaiterCallback = () => Promise<ethers.providers.TransactionReceipt>
 
-// export WaiterCallback
-
+/**
+ * @name lamport_getCurrentAndNextKeyData
+ * @description A convenience function 
+ * @author William Doyle
+ */
 function lamport_getCurrentAndNextKeyData(k: KeyTracker): ({
     current_keys: LamportKeyPair;
     next_keys: LamportKeyPair;
@@ -49,16 +58,9 @@ function lamport_getCurrentAndNextKeyData(k: KeyTracker): ({
 
 /**
  * @name buildCallData
+ * @description A function to construct the data bundle to be passed to SimpleWallet::execute
  * @author William Doyle 
  * @date October 25th 2022
- * @description A function to construct the data bundle to be passed to SimpleWallet::execute
- * @param abi 
- * @param functionSignature 
- * @param args 
- * @param address 
- * @param value 
- * @param gas 
- * @returns string  
  */
 function buildCallData(abi: any, functionSignature: string, args: any[], address: string, value: string = '0', gas: string = '100000'): string {
     const encoder: ethers.utils.AbiCoder = new ethers.utils.AbiCoder()
@@ -68,6 +70,11 @@ function buildCallData(abi: any, functionSignature: string, args: any[], address
     return _data
 }
 
+/**
+ * @name buildExecuteArguments
+ * @description
+ * @author William Doyle
+ */
 function buildExecuteArguments(k: KeyTracker, functionName: string, abi: any, address: string, args: any[], value: string = '0', gas: string = '100000'): any[] {
     const { current_keys, next_keys, nextpkh, currentpkh } = lamport_getCurrentAndNextKeyData(k)
     const _data = buildCallData(abi, functionName, args, address, value, gas)
@@ -107,45 +114,8 @@ type State = {
  * @date November 1st 2022
  */
 export default class LamportWalletManager {
-
-    state: State = {} as State  // TODO: make this private and add only necessary accessors
+    state: State = {} as State  
     gasPayer : ethers.Signer | null = null
-
-    // /**
-    //  * @name buyNew
-    //  * @description a function to buy a new wallet 
-    //  * @date November 4th 2022
-    //  * @author William Doyle
-    //  */
-    // static async buyNew(gasPrivateKey: string, blockchain: string): Promise<LamportWalletManager> {
-    //     const {
-    //         factoryAddress,
-    //         rpc,
-    //         chainid,
-    //         price
-    //     } = (() => {
-    //         const rval = supportedBlockchains.find((bc: any) => bc.name === blockchain)
-    //         if (!rval)
-    //             throw new Error(`buyNew:: Unsupported Blockchain ${blockchain}`)
-    //         return rval
-    //     })()
-
-    //     const provider = ethers.getDefaultProvider(rpc)
-    //     const gasWallet = new ethers.Wallet(gasPrivateKey, provider)
-
-    //     const factory = new ethers.Contract(factoryAddress, factoryabi, gasWallet)
-    //     const eip1271Wallet = ethers.Wallet.createRandom()
-
-    //     const kt: KeyTracker = new KeyTracker()
-
-    //     const tx = await factory.createWalletEther(eip1271Wallet.address, kt.pkh, { value: ethers.utils.parseEther(price.toString()) })
-
-    //     const event = (await tx.wait()).events.find((e: any) => e.event === "WalletCreated")
-    //     const walletAddress = event.args.walletAddress
-
-    //     const _lwm: LamportWalletManager = new LamportWalletManager(walletAddress, chainid, kt, rpc, eip1271Wallet.privateKey, gasWallet.privateKey)
-    //     return _lwm
-    // }
 
     /**
      * @name getGasPayer
@@ -165,7 +135,6 @@ export default class LamportWalletManager {
         throw new Error(`getGasPayer:: No gas payer available, you must set one with setGasPayer`)
     }
 
-
     /**
      *  @naem setGasPayer
      *  @description a function to set the gas payer... to be used in the browser where we don't have direct access to the private key 
@@ -176,6 +145,12 @@ export default class LamportWalletManager {
         this.gasPayer = gasPayer
     }
 
+    /**
+     * @name _buyNew
+     * @description a function to buy a new wallet
+     * @date November 23rd 2022
+     * @author William Doyle 
+     */
     static async _buyNew(signer: ethers.Signer | ethers.Wallet, blockchain: string): Promise<LamportWalletManager> {
         const {
             factoryAddress,
@@ -188,11 +163,6 @@ export default class LamportWalletManager {
                 throw new Error(`buyNew:: Unsupported Blockchain ${blockchain}`)
             return rval
         })()
-
-        // const provider = ethers.getDefaultProvider(rpc)
-        // const gasWallet = new ethers.Wallet(gasPrivateKey, provider)
-
-        // const factory = new ethers.Contract(factoryAddress, factoryabi, gasWallet)
         const factory = new ethers.Contract(factoryAddress, factoryabi, signer)
         const eip1271Wallet = ethers.Wallet.createRandom()
 
@@ -203,7 +173,6 @@ export default class LamportWalletManager {
         const event = (await tx.wait()).events.find((e: any) => e.event === "WalletCreated")
         const walletAddress = event.args.walletAddress
 
-        // const _lwm: LamportWalletManager = new LamportWalletManager(walletAddress, chainid, kt, rpc, eip1271Wallet.privateKey, gasWallet.privateKey)
         const pri = (() => {
             if (signer instanceof ethers.Wallet) {
                 return signer.privateKey
@@ -213,7 +182,6 @@ export default class LamportWalletManager {
 
         const _lwm: LamportWalletManager = new LamportWalletManager(walletAddress, chainid, kt, rpc, eip1271Wallet.privateKey, pri)
         return _lwm
-
     }
 
     /**
@@ -238,21 +206,14 @@ export default class LamportWalletManager {
         const provider = ethers.getDefaultProvider(rpc)
         const gasWallet = new ethers.Wallet(gasPrivateKey, provider)
         return LamportWalletManager._buyNew(gasWallet, blockchain)
-
-        // const factory = new ethers.Contract(factoryAddress, factoryabi, gasWallet)
-        // const eip1271Wallet = ethers.Wallet.createRandom()
-
-        // const kt: KeyTracker = new KeyTracker()
-
-        // const tx = await factory.createWalletEther(eip1271Wallet.address, kt.pkh, { value: ethers.utils.parseEther(price.toString()) })
-
-        // const event = (await tx.wait()).events.find((e: any) => e.event === "WalletCreated")
-        // const walletAddress = event.args.walletAddress
-
-        // const _lwm: LamportWalletManager = new LamportWalletManager(walletAddress, chainid, kt, rpc, eip1271Wallet.privateKey, gasWallet.privateKey)
-        // return _lwm
     }
 
+    /**
+     * @name buyNew_mm
+     * @description a function to buy a new wallet using metamask as the gas payer
+     * @date November 23rd 2022
+     * @author William Doyle 
+     */
     static async buyNew_mm(signer: ethers.Signer, blockchain: string): Promise<LamportWalletManager> {
         return LamportWalletManager._buyNew(signer, blockchain)
     }
@@ -281,7 +242,6 @@ export default class LamportWalletManager {
         return t
     }
 
-
     /**
      * @name gasWalletAddress
      * @description a getter for the gas wallet address... computed from the gas private key. This is the vulnrable address that should be used only for gas payments
@@ -289,7 +249,6 @@ export default class LamportWalletManager {
      * @author William Doyle
      */
     get gasWalletAddress(): string {
-
         if (this.state.eoa_gas_pri === null)
             throw new Error(`gasWalletAddress:: gas private key is null`)
         return ethers.utils.computeAddress(this.state.eoa_gas_pri)
@@ -347,12 +306,10 @@ export default class LamportWalletManager {
      * @author William Doyle
      */
     async call_recover(): Promise<WaiterCallback> {
+        const gasWallet = await this.getGasPayer()
+        if (gasWallet === null)
+            throw new Error(`call_recover:: gas wallet is null`)
 
-        if (this.state.eoa_gas_pri === null)
-            throw new Error(`gasWalletAddress:: gas private key is null`)
-
-        const provider = ethers.getDefaultProvider(this.state.network_provider_url)
-        const gasWallet = new ethers.Wallet(this.state.eoa_gas_pri, provider)
         const lamportwallet: ethers.Contract = new ethers.Contract(this.state.walletAddress, walletabi, gasWallet)
 
         const recoveryOptions = await lamportwallet.getRecoveryPKHs()
@@ -386,11 +343,6 @@ export default class LamportWalletManager {
      * @author William Doyle
      */
     async call_setTenRecoveryPKHs(): Promise<WaiterCallback> {
-
-
-        if (this.state.eoa_gas_pri === null)
-            throw new Error(`gasWalletAddress:: gas private key is null`)
-
         const tenKeys = Array.from({ length: 10 }, mk_key_pair)
         const tenPKHs: string[] = tenKeys.map(pair => KeyTracker.pkhFromPublicKey(pair.pub))
 
@@ -407,8 +359,9 @@ export default class LamportWalletManager {
         if (!is_valid_sig)
             throw new Error(`LamportWalletManager:: Invalid Lamport Signature`)
 
-        const provider = ethers.getDefaultProvider(this.state.network_provider_url)
-        const gasWallet = new ethers.Wallet(this.state.eoa_gas_pri, provider)
+        const gasWallet = await this.getGasPayer()
+        if (gasWallet === null)
+            throw new Error(`call_setTenRecoveryPKHs:: gas wallet is null`)
         const lamportwallet: ethers.Contract = new ethers.Contract(this.state.walletAddress, walletabi, gasWallet)
 
         const tx = await lamportwallet.setTenRecoveryPKHs(tenPKHs, current_keys.pub, sig.map(s => `0x${s}`), nextpkh)
@@ -427,14 +380,9 @@ export default class LamportWalletManager {
      * @author William Doyle
      */
     async call_execute(_contractAddress: string, fsig: string, args: string[], abi: any): Promise<WaiterCallback> {
-
-
-        if (this.state.eoa_gas_pri === null)
-            throw new Error(`gasWalletAddress:: gas private key is null`)
-
         const contractAddress = this.nameOrAddressToAddress(_contractAddress)
-        const provider = ethers.getDefaultProvider(this.state.network_provider_url)
-        const gasWallet = new ethers.Wallet(this.state.eoa_gas_pri, provider)
+        const gasWallet = await this.getGasPayer()
+
         const lamportwallet: ethers.Contract = new ethers.Contract(this.state.walletAddress, walletabi, gasWallet)
 
         const tx = await lamportwallet.execute(...buildExecuteArguments(this.state.kt, fsig, abi, contractAddress, args))
@@ -451,15 +399,9 @@ export default class LamportWalletManager {
      * @author William Doyle
      */
     async call_sendEther(_toAddress: string, _amount: string | number | ethers.BigNumber): Promise<WaiterCallback> {
-
-
-        if (this.state.eoa_gas_pri === null)
-            throw new Error(`gasWalletAddress:: gas private key is null`)
-
         const toAddress = this.nameOrAddressToAddress(_toAddress)
         const amount: string = ethers.BigNumber.from(_amount).toString()
-        const provider = ethers.getDefaultProvider(this.state.network_provider_url)
-        const gasWallet = new ethers.Wallet(this.state.eoa_gas_pri, provider)
+        const gasWallet = await this.getGasPayer()
 
         const { current_keys, nextpkh, } = lamport_getCurrentAndNextKeyData(this.state.kt)
         const packed = (() => {
@@ -489,11 +431,11 @@ export default class LamportWalletManager {
     }
 
     /**
-         * @name transfernft
-         * @description transfer an NFT to another address
-         * @date November 8th 2022
-         * @author William Doyle
-         */
+     * @name transfernft
+     * @description transfer an NFT to another address
+     * @date November 8th 2022
+     * @author William Doyle
+     */
     async transferNft(_nftAddress: string, tokenId: string, _toAddress: string): Promise<WaiterCallback> {
         const nftAddress = this.nameOrAddressToAddress(_nftAddress)
         const toAddress = this.nameOrAddressToAddress(_toAddress)
@@ -653,8 +595,6 @@ export default class LamportWalletManager {
         return Promise.all(p_tokens)
     }
 
-
-
     /**
      * @name pkh_fromChain
      * @description get the current public key hash as it is on chain (source this data from chain: not from the KeyTracker)
@@ -712,7 +652,6 @@ export default class LamportWalletManager {
     async view(): Promise<string[][][]> {
         const tables: string[][][] = []
 
-
         // tables.push([
         // // wallet address + balance
         // [this.state.walletAddress, await this.ethBalance()],
@@ -722,7 +661,6 @@ export default class LamportWalletManager {
         // ])
 
         return tables
-
     }
 
     /**
