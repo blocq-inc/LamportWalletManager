@@ -117,6 +117,7 @@ type State = {
 export default class LamportWalletManager {
     state: State = {} as State
     gasPayer: ethers.Signer | null = null
+    provider : ethers.providers.JsonRpcProvider | null = null
 
     /**
      * @name getGasPayer
@@ -182,6 +183,8 @@ export default class LamportWalletManager {
         })()
 
         const _lwm: LamportWalletManager = new LamportWalletManager(walletAddress, chainid, kt, rpc, eip1271Wallet.privateKey, pri)
+        _lwm.addNFT(await factory.mintingAddress())
+        console.log(`minting address: ${await factory.mintingAddress()}`)
         return _lwm
     }
 
@@ -288,6 +291,7 @@ export default class LamportWalletManager {
         this.state.eoa_gas_pri = eoa_gas_pri
         this.state.backup_keys = []
         this.state.friends = []
+        this.state.tx_hashes = []
     }
 
     /**
@@ -329,7 +333,8 @@ export default class LamportWalletManager {
             throw new Error(`Invalid Lamport Signature`)
 
         const tx = await lamportwallet.recover(k2.pkh, recoveryKeyPair.pub, sig.map(s => `0x${s}`))
-        this.state.tx_hashes.push(tx.hash)
+        // this.state.tx_hashes.push(tx.hash)
+        this.pushTxHash(tx.hash)
         this.state.kt = k2
 
         return async () => {
@@ -367,7 +372,8 @@ export default class LamportWalletManager {
         const lamportwallet: ethers.Contract = new ethers.Contract(this.state.walletAddress, walletabi, gasWallet)
 
         const tx = await lamportwallet.setTenRecoveryPKHs(tenPKHs, current_keys.pub, sig.map(s => `0x${s}`), nextpkh)
-        this.state.tx_hashes.push(tx.hash)
+        // this.state.tx_hashes.push(tx.hash)
+        this.pushTxHash(tx.hash)
 
         this.state.backup_keys = tenKeys
         return async () => {
@@ -390,7 +396,8 @@ export default class LamportWalletManager {
 
         const tx = await lamportwallet.execute(...buildExecuteArguments(this.state.kt, fsig, abi, contractAddress, args))
 
-        this.state.tx_hashes.push(tx.hash)
+        // this.state.tx_hashes.push(tx.hash)
+        this.pushTxHash(tx.hash)
 
         return async () => {
             const provider = ethers.getDefaultProvider(this.state.network_provider_url)
@@ -430,7 +437,8 @@ export default class LamportWalletManager {
             sig.map(s => `0x${s}`),
         )
 
-        this.state.tx_hashes.push(tx.hash)
+        // this.state.tx_hashes.push(tx.hash)
+        this.pushTxHash(tx.hash)
 
         return async () => {
             const provider = ethers.getDefaultProvider(this.state.network_provider_url)
@@ -705,9 +713,50 @@ export default class LamportWalletManager {
      * @date November 24th 2022
      * @author William Doyle
      */
-    get topTxHash() :  string | null {
-        if (this.state.tx_hashes.length === 0)
+    get topTxHash(): string | null {
+        if ((this.state.tx_hashes ?? []).length === 0)
             return null
         return this.state.tx_hashes[this.state.tx_hashes.length - 1]
     }
+
+    /**
+     * @name pushTxHash
+     * @description push a new tx hash to the tx_hashes array
+     * @date November 24th 2022
+     * @author William Doyle
+     */
+    pushTxHash(tx_hash: string) {
+        if (this.state.tx_hashes === undefined)
+            this.state.tx_hashes = []
+        this.state.tx_hashes.push(tx_hash)
+    }
+
+    /**
+     * @name address
+     * @description get the address of the wallet
+     * @date November 24th 2022
+     * @author William Doyle
+     */
+    get address(): string {
+        return this.state.walletAddress
+    }
+
+    /**
+     * @name addressQRCodeURL
+     * @description get the url of the qr code for the wallet address
+     * @date November 24th 2022
+     * @author William Doyle
+     */
+    get addressQRCodeURL(): string {
+        return `https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${this.address ?? ''}&choe=UTF-8`;
+    }
+
+    // /**
+    //  * @date November 24th 2022
+    //  */
+    // async history(): Promise<ethers.providers.TransactionReceipt[]> {
+    //     const provider = ethers.getDefaultProvider(this.state.network_provider_url)
+    //     return Promise.all(this.state.tx_hashes.map(provider.getTransactionReceipt))
+    // }
+
 }
