@@ -1,7 +1,7 @@
 [
     {
         "name": "sepolia",
-        "factoryAddress": "0xF3EB62b60A4DE8703EFfa1b62B9a2000874b5b76",
+        "factoryAddress": "0x1eb38A38918D8DA71e9F6489cd1CE4601257e84D",
         "rpc": "https://rpc2.sepolia.org",
         "chainid": "11155111",
         "price": "0.01"
