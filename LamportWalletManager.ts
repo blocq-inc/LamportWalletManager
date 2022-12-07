@@ -8,6 +8,8 @@ import erc721abi from './abi/erc721abi.json'
 import { LamportKeyPair, KeyPair, PubPair } from './types'
 import { hash_b, mk_key_pair, sign_hash, verify_signed_hash, } from './functions'
 
+type PositiveIntegerLessThanTen = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+
 /**
  * @name TokenInfo
  * @description A type to hold an NFT's token id and uri
@@ -31,6 +33,7 @@ type Friend = {
  * @description used to track the progress of a transaction
  */
 export type WaiterCallback = () => Promise<ethers.providers.TransactionReceipt>
+
 
 /**
  * @name lamport_getCurrentAndNextKeyData
@@ -117,7 +120,7 @@ type State = {
 export default class LamportWalletManager {
     state: State = {} as State
     gasPayer: ethers.Signer | null = null
-    provider : ethers.providers.JsonRpcProvider | null = null
+    provider: ethers.providers.JsonRpcProvider | null = null
 
     /**
      * @name getGasPayer
@@ -183,8 +186,14 @@ export default class LamportWalletManager {
         })()
 
         const _lwm: LamportWalletManager = new LamportWalletManager(walletAddress, chainid, kt, rpc, eip1271Wallet.privateKey, pri)
-        _lwm.addNFT(await factory.mintingAddress())
-        console.log(`minting address: ${await factory.mintingAddress()}`)
+
+        if (chainid === '137') {
+            // add POQ nft to list of known
+            _lwm.addNFT(`0x34a86b3b9523d2d19bbf199329983c802b3d4760`)
+        }
+
+        // _lwm.addNFT(await factory.mintingAddress())
+        // console.log(`minting address: ${await factory.mintingAddress()}`)
         return _lwm
     }
 
@@ -310,7 +319,7 @@ export default class LamportWalletManager {
      * @date November 1st 2022
      * @author William Doyle
      */
-    async call_recover(): Promise<WaiterCallback> {
+    async call_recover(selectedRecoveryKeyIndex : PositiveIntegerLessThanTen = 0): Promise<WaiterCallback> {
         const gasWallet = await this.getGasPayer()
         if (gasWallet === null)
             throw new Error(`call_recover:: gas wallet is null`)
@@ -318,7 +327,7 @@ export default class LamportWalletManager {
         const lamportwallet: ethers.Contract = new ethers.Contract(this.state.walletAddress, walletabi, gasWallet)
 
         const recoveryOptions = await lamportwallet.getRecoveryPKHs()
-        const recoveryKeyPair = this.state.backup_keys.find(pair => KeyTracker.pkhFromPublicKey(pair.pub) === recoveryOptions[0])
+        const recoveryKeyPair = this.state.backup_keys.find(pair => KeyTracker.pkhFromPublicKey(pair.pub) === recoveryOptions[selectedRecoveryKeyIndex])
 
         if (recoveryKeyPair === undefined)
             throw new Error(`LamportWalletManager:: Could not find recovery key pair`)
@@ -582,6 +591,14 @@ export default class LamportWalletManager {
         return [name, symbol, balance]
     }
 
+    // Nov 25 2022
+    async getTotalSupply(contractAddress: string, abi = erc20abi): Promise<string> {
+        const provider = ethers.getDefaultProvider(this.state.network_provider_url)
+        // const contract = new ethers.Contract(contractAddress, erc20abi, provider)
+        const contract = new ethers.Contract(contractAddress, abi, provider)
+        return (await contract.totalSupply()).toString()
+    }
+
     /**
      * @name getMyTokens
      * @description get the info for all the tokens on a erc721 contract that belong to the wallet. Returns null if contract does not implement ERC721Enumerable
@@ -758,5 +775,15 @@ export default class LamportWalletManager {
     //     const provider = ethers.getDefaultProvider(this.state.network_provider_url)
     //     return Promise.all(this.state.tx_hashes.map(provider.getTransactionReceipt))
     // }
+
+    /**
+     * @name get walletABI
+     * @description get the wallet abi
+     * @date December 1st 2022
+     * @author William Doyle
+     */
+    get walletABI(): ethers.ContractInterface {
+        return walletabi as ethers.ContractInterface
+    }
 
 }
