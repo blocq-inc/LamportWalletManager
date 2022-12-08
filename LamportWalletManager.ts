@@ -319,7 +319,7 @@ export default class LamportWalletManager {
      * @date November 1st 2022
      * @author William Doyle
      */
-    async call_recover(selectedRecoveryKeyIndex : PositiveIntegerLessThanTen = 0): Promise<WaiterCallback> {
+    async call_recover(selectedRecoveryKeyIndex: PositiveIntegerLessThanTen = 0): Promise<WaiterCallback> {
         const gasWallet = await this.getGasPayer()
         if (gasWallet === null)
             throw new Error(`call_recover:: gas wallet is null`)
@@ -403,7 +403,16 @@ export default class LamportWalletManager {
 
         const lamportwallet: ethers.Contract = new ethers.Contract(this.state.walletAddress, walletabi, gasWallet)
 
-        const tx = await lamportwallet.execute(...buildExecuteArguments(this.state.kt, fsig, abi, contractAddress, args))
+        const executionArguments = buildExecuteArguments(this.state.kt, fsig, abi, contractAddress, args)
+        const gasLimit = lamportwallet.estimateGas.execute(...executionArguments)
+
+        const gasPrice = gasWallet.getGasPrice()
+
+
+        const tx = await lamportwallet.execute(...executionArguments, {
+            gasLimit: gasLimit,
+            gasPrice: gasPrice
+        })
 
         // this.state.tx_hashes.push(tx.hash)
         this.pushTxHash(tx.hash)
