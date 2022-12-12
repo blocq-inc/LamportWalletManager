@@ -795,4 +795,18 @@ export default class LamportWalletManager {
         return walletabi as ethers.ContractInterface
     }
 
+    /**
+     * @name getDecimalsOfERC20
+     * @description get the decimals of an erc20 token
+     * @date December 8th 2022
+     * @author William Doyle
+     */
+    async getDecimalsOfERC20(address: string): Promise<string> {
+        // construct the contract
+        const provider = ethers.getDefaultProvider(this.state.network_provider_url)
+        const erc20: ethers.Contract = new ethers.Contract(address, erc20abi, provider)
+
+        // get the decimals
+        return (await erc20.decimals()).toString()
+    }
 }
