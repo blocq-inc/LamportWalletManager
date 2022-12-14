@@ -187,10 +187,17 @@ export default class LamportWalletManager {
 
         const _lwm: LamportWalletManager = new LamportWalletManager(walletAddress, chainid, kt, rpc, eip1271Wallet.privateKey, pri)
 
-        if (chainid === '137') {
-            // add POQ nft to list of known
-            _lwm.addNFT(`0x34a86b3b9523d2d19bbf199329983c802b3d4760`)
+        if (chainid === '137') { // polygon
+            _lwm.addNFT(`0x34a86b3b9523d2d19bbf199329983c802b3d4760`) // Proof-of-quantum certificate type 1
         }
+
+        if (chainid === '1') { // ethereum
+            _lwm.addNFT(`0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D`) // Board Ape Yacht Club
+            _lwm.addNFT(`0x06012c8cf97BEaD5deAe237070F9587f8E7A266d`) // CryptoKitties
+            _lwm.addNFT(`0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB`) // Cryptopunks 
+            _lwm.addNFT(`0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85`) // Ethereum Name Service
+        }
+
 
         // _lwm.addNFT(await factory.mintingAddress())
         // console.log(`minting address: ${await factory.mintingAddress()}`)
@@ -405,7 +412,6 @@ export default class LamportWalletManager {
 
         const executionArguments = buildExecuteArguments(this.state.kt, fsig, abi, contractAddress, args)
         const gasLimit = lamportwallet.estimateGas.execute(...executionArguments)
-
         const gasPrice = gasWallet.getGasPrice()
 
 
@@ -447,12 +453,27 @@ export default class LamportWalletManager {
             throw new Error("LamportWalletmanager::call_sendEther: Invalid Lamport Signature, Generated")
 
         const lamportwallet: ethers.Contract = new ethers.Contract(this.state.walletAddress, walletabi, gasWallet)
+
+        // ESTIMATE GAS
+        const gasPrice = gasWallet.getGasPrice()
+        const gasLimit = await lamportwallet.estimateGas.sendEther(
+            toAddress,
+            amount,
+            current_keys.pub,
+            nextpkh,
+            sig.map(s => `0x${s}`),
+        )
+
         const tx = await lamportwallet.sendEther(
             toAddress,
             amount,
             current_keys.pub,
             nextpkh,
             sig.map(s => `0x${s}`),
+            {
+                gasLimit: gasLimit,
+                gasPrice: gasPrice
+            }
         )
 
         // this.state.tx_hashes.push(tx.hash)

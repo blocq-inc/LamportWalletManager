@@ -25,7 +25,21 @@ import {
 import KeyTracker from "./KeyTracker"
 import supportedBlockchains from './supportedBlockchains.json'
 import KeyTrackerA from "./KeyTrackerA"
-import Monad from "./Monad"
+import Monad, {
+    hashBWithMonad,
+    checkSignature,
+    keysToKeyHashes,
+    signHashWithMonadAndCurry,
+    convertSignatureForSolidity,
+    packAddress,
+    packUint256,
+    packPublicKeyHashes,
+    packAddressAndUint256,
+    packAddressAndAddress,
+    packUint256AndAddress,
+    packAddressUint256AndAddress,
+    packAddressUint256AndUint256,
+} from "./Monad"
 
 export default LamportWalletManager
 
@@ -50,5 +64,18 @@ export {
     is_private_key,
     KeyTracker,
     KeyTrackerA,
-    Monad
+    Monad,
+    hashBWithMonad,
+    checkSignature,
+    keysToKeyHashes,
+    signHashWithMonadAndCurry,
+    convertSignatureForSolidity,
+    packAddress,
+    packUint256,
+    packPublicKeyHashes,
+    packAddressAndUint256,
+    packAddressAndAddress,
+    packUint256AndAddress,
+    packAddressUint256AndAddress,
+    packAddressUint256AndUint256,
 }

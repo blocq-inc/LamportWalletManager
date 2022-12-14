@@ -4,7 +4,7 @@
         "factoryAddress": "0x5D58355AeFa81AAD5672dd39d6D8C73fDbA237a9",
         "rpc":"https://1rpc.io/eth",
         "chainid": "1",
-        "price": "0.01",
+        "price": "0.000000000001",
         "explorer": "https://etherscan.io/"
     }, 
     {
@@ -12,7 +12,7 @@
         "factoryAddress": "0x6eaE729F136Fa64833Ef40bcECeBfD6442F00659",
         "rpc": "https://polygon-rpc.com/",
         "chainid": "137",
-        "price": "0.01",
+        "price": "0.000000000001",
         "explorer": "https://polygonscan.com/"
     },
     {
