@@ -407,10 +407,13 @@ export default class LamportWalletManager {
         const lamportwallet: ethers.Contract = new ethers.Contract(this.state.walletAddress, walletabi, gasWallet)
 
         // TODO: ESTIMATE GAS
-        const gasLimit = await lamportwallet.estimateGas.execute(k2.pkh, recoveryKeyPair.pub, sig.map(s => `0x${s}`))
+        const gasLimit = await lamportwallet.estimateGas.setTenRecoveryPKHs(tenPKHs, current_keys.pub, sig.map(s => `0x${s}`), nextpkh)
         const gasPrice = await gasWallet.getGasPrice()
 
-        const tx = await lamportwallet.setTenRecoveryPKHs(tenPKHs, current_keys.pub, sig.map(s => `0x${s}`), nextpkh)
+        const tx = await lamportwallet.setTenRecoveryPKHs(tenPKHs, current_keys.pub, sig.map(s => `0x${s}`), nextpkh, {
+            gasLimit,
+            gasPrice
+        })
         // this.state.tx_hashes.push(tx.hash)
         this.pushTxHash(tx.hash)
 
