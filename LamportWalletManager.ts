@@ -360,8 +360,14 @@ export default class LamportWalletManager {
         if (!is_valid_sig)
             throw new Error(`Invalid Lamport Signature`)
 
-            // TODO: ERS
-        const tx = await lamportwallet.recover(k2.pkh, recoveryKeyPair.pub, sig.map(s => `0x${s}`))
+        const gasLimit = await lamportwallet.estimateGas.execute(k2.pkh, recoveryKeyPair.pub, sig.map(s => `0x${s}`))
+        const gasPrice = await gasWallet.getGasPrice()
+
+        const tx = await lamportwallet.recover(k2.pkh, recoveryKeyPair.pub, sig.map(s => `0x${s}`),
+        {
+            gasLimit,
+            gasPrice
+        })
         // this.state.tx_hashes.push(tx.hash)
         this.pushTxHash(tx.hash)
         this.state.kt = k2
