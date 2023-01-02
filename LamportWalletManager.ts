@@ -173,7 +173,7 @@ export default class LamportWalletManager {
 
         const kt: KeyTracker = new KeyTracker()
 
-        const gasLimit = await factory.estimateGas.execute(eip1271Wallet.address, kt.pkh,)
+        const gasLimit = await factory.estimateGas.createWalletEther(eip1271Wallet.address, kt.pkh,)
         const gasPrice = await signer.getGasPrice()
 
         const tx = await factory.createWalletEther(eip1271Wallet.address, kt.pkh, { 
@@ -360,7 +360,7 @@ export default class LamportWalletManager {
         if (!is_valid_sig)
             throw new Error(`Invalid Lamport Signature`)
 
-        const gasLimit = await lamportwallet.estimateGas.execute(k2.pkh, recoveryKeyPair.pub, sig.map(s => `0x${s}`))
+        const gasLimit = await lamportwallet.estimateGas.recover(k2.pkh, recoveryKeyPair.pub, sig.map(s => `0x${s}`))
         const gasPrice = await gasWallet.getGasPrice()
 
         const tx = await lamportwallet.recover(k2.pkh, recoveryKeyPair.pub, sig.map(s => `0x${s}`),
@@ -368,7 +368,7 @@ export default class LamportWalletManager {
             gasLimit,
             gasPrice
         })
-        // this.state.tx_hashes.push(tx.hash)
+
         this.pushTxHash(tx.hash)
         this.state.kt = k2
 
@@ -407,6 +407,9 @@ export default class LamportWalletManager {
         const lamportwallet: ethers.Contract = new ethers.Contract(this.state.walletAddress, walletabi, gasWallet)
 
         // TODO: ESTIMATE GAS
+        const gasLimit = await lamportwallet.estimateGas.execute(k2.pkh, recoveryKeyPair.pub, sig.map(s => `0x${s}`))
+        const gasPrice = await gasWallet.getGasPrice()
+
         const tx = await lamportwallet.setTenRecoveryPKHs(tenPKHs, current_keys.pub, sig.map(s => `0x${s}`), nextpkh)
         // this.state.tx_hashes.push(tx.hash)
         this.pushTxHash(tx.hash)
