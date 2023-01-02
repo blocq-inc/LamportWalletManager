@@ -4,7 +4,7 @@
         "factoryAddress": "0x5D58355AeFa81AAD5672dd39d6D8C73fDbA237a9",
         "rpc":"https://1rpc.io/eth",
         "chainid": "1",
-        "price": "0.000000000001",
+        "price": "0.1",
         "explorer": "https://etherscan.io/"
     }, 
     {
@@ -12,8 +12,16 @@
         "factoryAddress": "0x6eaE729F136Fa64833Ef40bcECeBfD6442F00659",
         "rpc": "https://polygon-rpc.com/",
         "chainid": "137",
-        "price": "0.000000000001",
+        "price": "0.1",
         "explorer": "https://polygonscan.com/"
+    },
+    {
+        "name":"avalanche",
+        "factoryAddress":"0x47425b57e18c139343f3fed1c2b840d9e010070b",
+        "rpc": "https://api.avax.network/ext/bc/C/rpc",
+        "chainid": "43114",
+        "price": "0.1",
+        "explorer": "https://snowtrace.io/"
     },
     {
         "name": "sepolia",

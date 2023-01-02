@@ -173,7 +173,14 @@ export default class LamportWalletManager {
 
         const kt: KeyTracker = new KeyTracker()
 
-        const tx = await factory.createWalletEther(eip1271Wallet.address, kt.pkh, { value: ethers.utils.parseEther(price.toString()) })
+        const gasLimit = await factory.estimateGas.execute(eip1271Wallet.address, kt.pkh,)
+        const gasPrice = await signer.getGasPrice()
+
+        const tx = await factory.createWalletEther(eip1271Wallet.address, kt.pkh, { 
+            value: ethers.utils.parseEther(price.toString()), 
+            gasLimit: gasLimit,
+            gasPrice: gasPrice
+        })
 
         const event = (await tx.wait()).events.find((e: any) => e.event === "WalletCreated")
         const walletAddress = event.args.walletAddress
@@ -198,6 +205,11 @@ export default class LamportWalletManager {
             _lwm.addNFT(`0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85`) // Ethereum Name Service
         }
 
+
+        if (chainid === '43114') { // avalanche
+            _lwm.addNFT(`0x797ac669a1908ca68cd9854994345f570495541a`) // Avvy Domains .avax
+            _lwm.addNFT(`0x2fa83f2fa89f275863b9491b1802dfea5a130024`) // CosmicIsland
+        }
 
         // _lwm.addNFT(await factory.mintingAddress())
         // console.log(`minting address: ${await factory.mintingAddress()}`)
@@ -348,6 +360,7 @@ export default class LamportWalletManager {
         if (!is_valid_sig)
             throw new Error(`Invalid Lamport Signature`)
 
+            // TODO: ERS
         const tx = await lamportwallet.recover(k2.pkh, recoveryKeyPair.pub, sig.map(s => `0x${s}`))
         // this.state.tx_hashes.push(tx.hash)
         this.pushTxHash(tx.hash)
@@ -387,6 +400,7 @@ export default class LamportWalletManager {
             throw new Error(`call_setTenRecoveryPKHs:: gas wallet is null`)
         const lamportwallet: ethers.Contract = new ethers.Contract(this.state.walletAddress, walletabi, gasWallet)
 
+        // TODO: ESTIMATE GAS
         const tx = await lamportwallet.setTenRecoveryPKHs(tenPKHs, current_keys.pub, sig.map(s => `0x${s}`), nextpkh)
         // this.state.tx_hashes.push(tx.hash)
         this.pushTxHash(tx.hash)
