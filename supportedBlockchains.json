@@ -24,6 +24,14 @@
         "explorer": "https://snowtrace.io/"
     },
     {
+        "name":"moonriver",
+        "factoryAddress":"0xD3987e3774624327901FdD1F062Df9949211991e",
+        "rpc":"https://moonriver.api.onfinality.io/public",
+        "chainid": "1285",
+        "price": "1",
+        "explorer": "https://moonriver.moonscan.io/"
+    },
+    {
         "name": "sepolia",
         "factoryAddress": "0x2E426DAa332FB9A068F2eAb30932f55a6af9d28f",
         "rpc": "https://rpc2.sepolia.org",
