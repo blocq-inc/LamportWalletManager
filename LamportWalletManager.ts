@@ -173,13 +173,13 @@ export default class LamportWalletManager {
 
         const kt: KeyTracker = new KeyTracker()
 
-        const gasLimit = await factory.estimateGas.createWalletEther(eip1271Wallet.address, kt.pkh,)
-        const gasPrice = await signer.getGasPrice()
+        // const gasLimit = await factory.estimateGas.createWalletEther(eip1271Wallet.address, kt.pkh,)
+        // const gasPrice = await signer.getGasPrice()
 
         const tx = await factory.createWalletEther(eip1271Wallet.address, kt.pkh, { 
             value: ethers.utils.parseEther(price.toString()), 
-            gasLimit: gasLimit,
-            gasPrice: gasPrice
+            // gasLimit: gasLimit,
+            // gasPrice: gasPrice
         })
 
         const event = (await tx.wait()).events.find((e: any) => e.event === "WalletCreated")
@@ -209,6 +209,12 @@ export default class LamportWalletManager {
         if (chainid === '43114') { // avalanche
             _lwm.addNFT(`0x797ac669a1908ca68cd9854994345f570495541a`) // Avvy Domains .avax
             _lwm.addNFT(`0x2fa83f2fa89f275863b9491b1802dfea5a130024`) // CosmicIsland
+        }
+
+        if (chainid === '1285') { // moonriver
+            _lwm.addNFT(`0x5bae38bfb57f0e77f244ac3edcbc91bf94ccd185`) // next gens
+            _lwm.addNFT(`0xc433f820467107bc5176b95f3a58248c4332f8de`) // next gems  
+
         }
 
         // _lwm.addNFT(await factory.mintingAddress())

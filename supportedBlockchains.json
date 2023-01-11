@@ -5,7 +5,8 @@
         "rpc":"https://1rpc.io/eth",
         "chainid": "1",
         "price": "0.1",
-        "explorer": "https://etherscan.io/"
+        "explorer": "https://etherscan.io/",
+        "isTestnet":false
     }, 
     {
         "name": "polygon",
@@ -13,7 +14,8 @@
         "rpc": "https://polygon-rpc.com/",
         "chainid": "137",
         "price": "0.1",
-        "explorer": "https://polygonscan.com/"
+        "explorer": "https://polygonscan.com/",
+        "isTestnet":false
     },
     {
         "name":"avalanche",
@@ -21,15 +23,17 @@
         "rpc": "https://api.avax.network/ext/bc/C/rpc",
         "chainid": "43114",
         "price": "0.1",
-        "explorer": "https://snowtrace.io/"
+        "explorer": "https://snowtrace.io/",
+        "isTestnet":false
     },
     {
         "name":"moonriver",
         "factoryAddress":"0xD3987e3774624327901FdD1F062Df9949211991e",
-        "rpc":"https://moonriver.api.onfinality.io/public",
+        "rpc":"https://rpc.api.moonriver.moonbeam.network",
         "chainid": "1285",
         "price": "1",
-        "explorer": "https://moonriver.moonscan.io/"
+        "explorer": "https://moonriver.moonscan.io/",
+        "isTestnet":false
     },
     {
         "name": "sepolia",
@@ -37,7 +41,8 @@
         "rpc": "https://rpc2.sepolia.org",
         "chainid": "11155111",
         "price": "0.01",
-        "explorer": "https://sepolia.etherscan.io/"
+        "explorer": "https://sepolia.etherscan.io/",
+        "isTestnet":true
     },
     {
         "name": "moonbase",
@@ -45,7 +50,8 @@
         "rpc": "https://rpc.testnet.moonbeam.network",
         "chainid": "1287",
         "price": "0.01",
-        "explorer": "https://moonbase.moonscan.io/"
+        "explorer": "https://moonbase.moonscan.io/",
+        "isTestnet":true
     },
     {
         "name": "mumbai",
@@ -53,6 +59,7 @@
         "rpc": "https://matic-mumbai.chainstacklabs.com",
         "chainid": "80001",
         "price": "0.01",
-        "explorer":"https://mumbai.polygonscan.com/"
+        "explorer":"https://mumbai.polygonscan.com/",
+        "isTestnet":true
     }
 ]
