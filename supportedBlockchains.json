@@ -6,7 +6,8 @@
         "chainid": "1",
         "price": "0.1",
         "explorer": "https://etherscan.io/",
-        "isTestnet":false
+        "isTestnet":false,
+        "currencyTicker": "ETH"
     }, 
     {
         "name": "polygon",
@@ -15,7 +16,8 @@
         "chainid": "137",
         "price": "0.1",
         "explorer": "https://polygonscan.com/",
-        "isTestnet":false
+        "isTestnet":false,
+        "currencyTicker": "MATIC"
     },
     {
         "name":"avalanche",
@@ -24,7 +26,8 @@
         "chainid": "43114",
         "price": "0.1",
         "explorer": "https://snowtrace.io/",
-        "isTestnet":false
+        "isTestnet":false,
+        "currencyTicker": "AVAX"
     },
     {
         "name":"moonriver",
@@ -33,7 +36,8 @@
         "chainid": "1285",
         "price": "1",
         "explorer": "https://moonriver.moonscan.io/",
-        "isTestnet":false
+        "isTestnet":false,
+        "currencyTicker": "MOVR"
     },
     {
         "name": "sepolia",
@@ -42,7 +46,8 @@
         "chainid": "11155111",
         "price": "0.01",
         "explorer": "https://sepolia.etherscan.io/",
-        "isTestnet":true
+        "isTestnet":true,
+        "currencyTicker": "SEPOL"
     },
     {
         "name": "moonbase",
@@ -51,7 +56,8 @@
         "chainid": "1287",
         "price": "0.01",
         "explorer": "https://moonbase.moonscan.io/",
-        "isTestnet":true
+        "isTestnet":true,
+        "currencyTicker": "DEV"
     },
     {
         "name": "mumbai",
@@ -60,6 +66,7 @@
         "chainid": "80001",
         "price": "0.01",
         "explorer":"https://mumbai.polygonscan.com/",
-        "isTestnet":true
+        "isTestnet":true,
+        "currencyTicker": "TestMATIC"
     }
 ]
