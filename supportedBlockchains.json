@@ -40,6 +40,16 @@
         "currencyTicker": "MOVR"
     },
     {
+        "name":"Binance Smart Chain",
+        "factoryAddress":"0x1c7671740A8d0E18F431557c73c98EA36D8b9bc0",
+        "rpc":"https://bsc-dataseed.binance.org",
+        "chainid": "56",
+        "price": "0.1",
+        "explorer": "https://bscscan.com/",
+        "isTestnet":false,
+        "currencyTicker": "BNB"
+    },
+    {
         "name": "sepolia",
         "factoryAddress": "0x2E426DAa332FB9A068F2eAb30932f55a6af9d28f",
         "rpc": "https://rpc2.sepolia.org",
