@@ -217,6 +217,10 @@ export default class LamportWalletManager {
 
         }
 
+        if (chainid === '100') { // GNOSIS
+            _lwm.addNFT(`0x22C1f6050E56d2876009903609a2cC3fEf83B415`) // POAP 
+        }
+
         // _lwm.addNFT(await factory.mintingAddress())
         // console.log(`minting address: ${await factory.mintingAddress()}`)
         return _lwm

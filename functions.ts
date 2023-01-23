@@ -140,3 +140,57 @@ export function sign_hash(hmsg: string, pri: RandPair[]): Sig {
 
 const pubFromPri = (pri: [string, string][]) => pri.map(p => ([hash_b(p[0]), hash_b(p[1])])) as PubPair[]
 export { pubFromPri }
+
+
+
+// UNSURE ABOUT THIS
+
+// function experimental_mk_key_pair  () {
+//     // FOR EASY READING
+//     const COMBINE = (a : string, b : string) => ethers.utils.solidityPack(['uint256', 'uint256'], [a, b])
+//     const HASH = (a : string) => ethers.utils.keccak256(a)
+//     const GENERATE_INITIAL_SECRET = () => ethers.utils.keccak256( ethers.utils.toUtf8Bytes (ethers.BigNumber.from(ethers.utils.randomBytes(32)).toHexString())).substring(2)
+
+//     // generate single 32 bytes secret
+//     const secret: string = GENERATE_INITIAL_SECRET()
+
+//     // derive 512 intermediate secrets
+//     const intermediate_secrets: string[] = Array.from({ length: 512 }).map((_, index : number) => HASH(COMBINE(secret, index.toString())))
+
+//     // pair them up
+//     const leftIntermediateSecrets: string[] = intermediate_secrets.filter((_, i) => i % 2 === 0)
+//     const rightIntermediateSecrets: string[] = intermediate_secrets.filter((_, i) => i % 2 === 1)
+
+//     // zip them up
+//     const pri: RandPair[] = leftIntermediateSecrets.map((l, i) => [l, rightIntermediateSecrets[i]]) as RandPair[]
+
+//     // derive public key
+//     const pub: PubPair[] = pubFromPri(pri.map(p => [`0x${p[0]}`, `0x${p[1]}`]))
+
+//     return { pri, pub, secret }
+// }
+
+function experimental_mk_key_pair  () {
+    // FOR EASY READING
+    const COMBINE = (a : string, b : string) => ethers.utils.solidityPack(['uint256', 'uint256'], [a, b])
+    const HASH = (a : string) => ethers.utils.keccak256(a)
+    const GENERATE_INITIAL_SECRET = () => ethers.utils.keccak256( ethers.utils.toUtf8Bytes (ethers.BigNumber.from(ethers.utils.randomBytes(32)).toHexString()))
+
+    // generate single 32 bytes secret
+    const secret: string = GENERATE_INITIAL_SECRET()
+
+    // derive 512 intermediate secrets
+    const intermediate_secrets: string[] = Array.from({ length: 512 }).map((_, index : number) => HASH(COMBINE(secret, index.toString())))
+
+    // pair them up
+    const leftIntermediateSecrets: string[] = intermediate_secrets.filter((_, i) => i % 2 === 0)
+    const rightIntermediateSecrets: string[] = intermediate_secrets.filter((_, i) => i % 2 === 1)
+
+    // zip them up
+    const pri: RandPair[] = leftIntermediateSecrets.map((l, i) => [l, rightIntermediateSecrets[i]]) as RandPair[]
+
+    // derive public key
+    const pub: PubPair[] = pubFromPri(pri.map(p => [p[0], p[1]]))
+
+    return { pri, pub, secret }
+}

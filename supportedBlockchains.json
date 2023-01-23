@@ -40,14 +40,24 @@
         "currencyTicker": "MOVR"
     },
     {
-        "name":"Binance Smart Chain",
+        "name":"binance_smart_chain",
         "factoryAddress":"0x1c7671740A8d0E18F431557c73c98EA36D8b9bc0",
         "rpc":"https://bsc-dataseed.binance.org",
         "chainid": "56",
-        "price": "0.1",
+        "price": "0.04",
         "explorer": "https://bscscan.com/",
         "isTestnet":false,
         "currencyTicker": "BNB"
+    },
+    {
+        "name":"gnosis",
+        "factoryAddress":"0x47425b57e18c139343f3fed1c2b840d9e010070b",
+        "rpc":"https://xdai-rpc.gateway.pokt.network",
+        "chainid": "100",
+        "price": "0.1",
+        "explorer": "https://gnosisscan.io/",
+        "isTestnet":false,
+        "currencyTicker": "xDai"
     },
     {
         "name": "sepolia",
