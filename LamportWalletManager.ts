@@ -176,8 +176,8 @@ export default class LamportWalletManager {
         // const gasLimit = await factory.estimateGas.createWalletEther(eip1271Wallet.address, kt.pkh,)
         // const gasPrice = await signer.getGasPrice()
 
-        const tx = await factory.createWalletEther(eip1271Wallet.address, kt.pkh, { 
-            value: ethers.utils.parseEther(price.toString()), 
+        const tx = await factory.createWalletEther(eip1271Wallet.address, kt.pkh, {
+            value: ethers.utils.parseEther(price.toString()),
             // gasLimit: gasLimit,
             // gasPrice: gasPrice
         })
@@ -374,10 +374,10 @@ export default class LamportWalletManager {
         const gasPrice = await gasWallet.getGasPrice()
 
         const tx = await lamportwallet.recover(k2.pkh, recoveryKeyPair.pub, sig.map(s => `0x${s}`),
-        {
-            gasLimit,
-            gasPrice
-        })
+            {
+                gasLimit,
+                gasPrice
+            })
 
         this.pushTxHash(tx.hash)
         this.state.kt = k2
@@ -657,12 +657,55 @@ export default class LamportWalletManager {
         return [name, symbol, balance]
     }
 
+    /**
+     * @name getContract
+     * @description get a contract object for a given address and abi
+     * @date January 29th 2023
+     * @author William Doyle 
+     */
+    getContract(address: string, abi: ethers.ContractInterface) {
+        const provider = ethers.getDefaultProvider(this.state.network_provider_url)
+        return new ethers.Contract(address, abi, provider)
+    }
+
+    /**
+     * @name getErc20Contract
+     * @description get a contract object for a given address and abi (or use default abi)
+     * @date January 29th 2023
+     * @author William Doyle 
+     */
+    getErc20Contract(address: string, abi = erc20abi) {
+        return this.getContract(address, abi)
+    }
+
+    /**
+     * @name getErc721Contract
+     * @description get a contract object for a given address and abi (or use default abi)
+     * @date January 29th 2023
+     * @author William Doyle 
+     */
+    getErc721Contract(address: string, abi = erc721abi) {
+        return this.getContract(address, abi)
+    }
+
     // Nov 25 2022
     async getTotalSupply(contractAddress: string, abi = erc20abi): Promise<string> {
         const provider = ethers.getDefaultProvider(this.state.network_provider_url)
         // const contract = new ethers.Contract(contractAddress, erc20abi, provider)
         const contract = new ethers.Contract(contractAddress, abi, provider)
         return (await contract.totalSupply()).toString()
+    }
+
+    /**
+     * @name getDecimals
+     * @description get the number of decimals for a currency
+     * @date January 27th 2023
+     * @author William Doyle 
+     */
+    async getDecimals(contractAddress: string, abi = erc20abi): Promise<any> {
+        const provider = ethers.getDefaultProvider(this.state.network_provider_url)
+        const contract = new ethers.Contract(contractAddress, abi, provider)
+        return await contract.decimals()
     }
 
     /**
