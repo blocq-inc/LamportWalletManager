@@ -1,6 +1,6 @@
 {
   "name": "lamportwalletmanager",
-  "version": "0.0.76",
+  "version": "0.0.83",
   "description": "",
   "main": "index.js",
   "types": "index.d.ts",

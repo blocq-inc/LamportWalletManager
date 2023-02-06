@@ -8,7 +8,7 @@ import erc721abi from './abi/erc721abi.json'
 import { LamportKeyPair, KeyPair, PubPair } from './types'
 import { hash_b, mk_key_pair, sign_hash, verify_signed_hash, } from './functions'
 
-type PositiveIntegerLessThanTen = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+export type PositiveIntegerLessThanTen = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
 /**
  * @name TokenInfo
@@ -219,6 +219,14 @@ export default class LamportWalletManager {
 
         if (chainid === '100') { // GNOSIS
             _lwm.addNFT(`0x22C1f6050E56d2876009903609a2cC3fEf83B415`) // POAP 
+        }
+
+        if (chainid === '80001') { // mumbai TESTNET
+            _lwm.addNFT(`0x4972838dDEED2accEf533BFb45e8121c5Fa7c864`)
+            _lwm.addNFT(`0x34992de82775D3ea8d0FCEecf0D0aA734eed90Fe`)
+            _lwm.addNFT(`0x72Bd1982693f294f7aaa466d024e3c1B370355BF`)
+
+            _lwm.addCurrency(`0xb2c4d0111Ab40bdB414daeE2e3F53c8e2f7254Ec`) // fake DAI (call mint to receive 1 DAI)
         }
 
         // _lwm.addNFT(await factory.mintingAddress())
@@ -520,6 +528,52 @@ export default class LamportWalletManager {
             return await provider.waitForTransaction(tx.hash)
         }
     }
+
+    /**
+     * @name call_sendEtherWithManualGas
+     * @description send ether to another address from the wallet, but manually set the gas limit and gas price manually
+     * @date January 30th 2023
+     * @author William Doyle 
+     */
+    async call_sendEtherWithManualGas(_toAddress: string, _amount: string | number | ethers.BigNumber, gasLimit: string, gasPrice: string): Promise<WaiterCallback> {
+        const toAddress = this.nameOrAddressToAddress(_toAddress)
+        const amount: string = ethers.BigNumber.from(_amount).toString()
+        const gasWallet = await this.getGasPayer()
+
+        const { current_keys, nextpkh, } = lamport_getCurrentAndNextKeyData(this.state.kt)
+        const packed = (() => {
+            const temp = ethers.utils.solidityPack(['address', 'uint256'], [toAddress, amount])
+            return ethers.utils.solidityPack(['bytes', 'bytes32'], [temp, nextpkh])
+        })()
+        const callhash = hash_b(packed)
+        const sig = sign_hash(callhash, current_keys.pri)
+
+        const is_valid_sig = verify_signed_hash(callhash, sig, current_keys.pub)
+        if (!is_valid_sig)
+            throw new Error("LamportWalletmanager::call_sendEther: Invalid Lamport Signature, Generated")
+
+        const lamportwallet: ethers.Contract = new ethers.Contract(this.state.walletAddress, walletabi, gasWallet)
+
+        const tx = await lamportwallet.sendEther(
+            toAddress,
+            amount,
+            current_keys.pub,
+            nextpkh,
+            sig.map(s => `0x${s}`),
+            {
+                gasLimit: gasLimit,
+                gasPrice: gasPrice
+            }
+        )
+
+        this.pushTxHash(tx.hash)
+
+        return async () => {
+            const provider = ethers.getDefaultProvider(this.state.network_provider_url)
+            return await provider.waitForTransaction(tx.hash)
+        }
+    }
+
 
     /**
      * @name transfernft
