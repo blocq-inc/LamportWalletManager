@@ -254,6 +254,25 @@ export default class LamportWalletManager {
             _lwm.addCurrency('0x9c58bacc331c9aa871afd802db6379a98e80cedb') // Gnosis Token
         }
 
+        if (chainid === '56') { // BSC
+            _lwm.addCurrency('0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3') // dai
+            _lwm.addCurrency('0x2170ed0880ac9a755fd29b2688956bd959f933f8') // ethereum peg
+            _lwm.addCurrency('0x55d398326f99059ff775485246999027b3197955') // peg usd
+            _lwm.addCurrency('0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c') // wrapped bnb
+            _lwm.addCurrency('0xe9e7cea3dedca5984780bafc599bd69add087d56') // peg usd
+            _lwm.addCurrency('0x3ee2200efb3400fabb9aacf31297cbdd1d435d47') // cardano peg
+            _lwm.addCurrency('0xba2ae424d960c26247dd6c32edc70b295c744c43') // doge peg
+            _lwm.addCurrency('0xcc42724c6683b7e57334c4e856f4c9965ed682bd') // matic
+            _lwm.addCurrency('0x7083609fce4d1d8dc0c979aab8c869ea2c873402') // polkadot peg
+            _lwm.addCurrency('0x2859e4544c4bb03966803b044a93563bd2d0dd4d') // shiba inu peg
+            _lwm.addCurrency('0x4338665cbb7b2485a8855a139b75d5e34ab0db94') // litecoin peg
+            _lwm.addCurrency('0x1ce0c2827e2ef14d5c4f29a091d735a204794041') // avalanche peg
+            _lwm.addCurrency('0xbf5140a22578168fd562dccf235e5d43a02ce9b1') // uniswap peg
+            _lwm.addCurrency('0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c') // bitcoin peg
+            _lwm.addCurrency('0x5f0da599bb2cccfcf6fdfd7d81743b6020864350') // maker peg 
+        
+        }
+
         if (chainid === '80001') { // mumbai TESTNET
             _lwm.addNFT(`0x4972838dDEED2accEf533BFb45e8121c5Fa7c864`)
             _lwm.addNFT(`0x34992de82775D3ea8d0FCEecf0D0aA734eed90Fe`)
