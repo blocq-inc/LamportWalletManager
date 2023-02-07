@@ -248,6 +248,10 @@ export default class LamportWalletManager {
 
         if (chainid === '100') { // GNOSIS
             _lwm.addNFT(`0x22C1f6050E56d2876009903609a2cC3fEf83B415`) // POAP 
+
+            _lwm.addCurrency('0x7122d7661c4564b7c6cd4878b06766489a6028a2') // MATIC
+            _lwm.addCurrency('0x4537e328bf7e4efa29d05caea260d7fe26af9d74') // Uniswap
+            _lwm.addCurrency('0x9c58bacc331c9aa871afd802db6379a98e80cedb') // Gnosis Token
         }
 
         if (chainid === '80001') { // mumbai TESTNET
