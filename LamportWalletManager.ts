@@ -225,10 +225,16 @@ export default class LamportWalletManager {
 
         }
 
-
         if (chainid === '43114') { // avalanche
             _lwm.addNFT(`0x797ac669a1908ca68cd9854994345f570495541a`) // Avvy Domains .avax
             _lwm.addNFT(`0x2fa83f2fa89f275863b9491b1802dfea5a130024`) // CosmicIsland
+
+            _lwm.addCurrency(`0xd586e7f844cea2f87f50152665bcbc2c279d8d70`) // dai
+            _lwm.addCurrency(`0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7`) // wrapped avax
+            _lwm.addCurrency(`0x02d980a0d7af3fb7cf7df8cb35d9edbcf355f665`) // Shiba Inu
+            _lwm.addCurrency(`0x8ebaf22b6f053dffeaf46f4dd9efa95d89ba8580`) // Uniswap
+            _lwm.addCurrency(`0x88128fd4b259552a9a1d457f435a6527aab72d42`) // Maker 
+            _lwm.addCurrency(`0xd501281565bf7789224523144fe5d98e8b28f267`) // 1inch
         }
 
         if (chainid === '1285') { // moonriver
