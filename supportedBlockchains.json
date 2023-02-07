@@ -88,5 +88,15 @@
         "explorer":"https://mumbai.polygonscan.com/",
         "isTestnet":true,
         "currencyTicker": "TestMATIC"
+    },
+    {
+        "name":"fuji",
+        "factoryAddress":"0xD3987e3774624327901FdD1F062Df9949211991e",
+        "rpc":"https://api.avax-test.network/ext/bc/C/rpc",
+        "chainid": "43113",
+        "price": "0.01",
+        "explorer": "https://testnet.snowtrace.io/",
+        "isTestnet":true,
+        "currencyTicker": "TestAVAX"
     }
 ]

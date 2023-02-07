@@ -196,6 +196,13 @@ export default class LamportWalletManager {
 
         if (chainid === '137') { // polygon
             _lwm.addNFT(`0x34a86b3b9523d2d19bbf199329983c802b3d4760`) // Proof-of-quantum certificate type 1
+
+            _lwm.addCurrency(`0x8f3cf7ad23cd3cadbd9735aff958023239c6a063`) // Dai
+            _lwm.addCurrency(`0x2C89bbc92BD86F8075d1DEcc58C7F4E0107f286b`) // Avalance Token
+            _lwm.addCurrency(`0x6f7C932e7684666C9fd1d44527765433e01fF61d`) // Maker
+            _lwm.addCurrency(`0x3BA4c387f786bFEE076A58914F5Bd38d668B42c3`) // BNB
+            _lwm.addCurrency(`0xd6df932a45c0f255f85145f286ea0b292b21c90b`) // Aave
+            _lwm.addCurrency(`0x9c2c5fd7b07e95ee044ddeba0e97a665f142394f`) // 1inch
         }
 
         if (chainid === '1') { // ethereum
@@ -203,6 +210,8 @@ export default class LamportWalletManager {
             _lwm.addNFT(`0x06012c8cf97BEaD5deAe237070F9587f8E7A266d`) // CryptoKitties
             _lwm.addNFT(`0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB`) // Cryptopunks 
             _lwm.addNFT(`0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85`) // Ethereum Name Service
+
+            _lwm.addCurrency(``)
         }
 
 
@@ -214,7 +223,6 @@ export default class LamportWalletManager {
         if (chainid === '1285') { // moonriver
             _lwm.addNFT(`0x5bae38bfb57f0e77f244ac3edcbc91bf94ccd185`) // next gens
             _lwm.addNFT(`0xc433f820467107bc5176b95f3a58248c4332f8de`) // next gems  
-
         }
 
         if (chainid === '100') { // GNOSIS
@@ -229,6 +237,11 @@ export default class LamportWalletManager {
             _lwm.addCurrency(`0xb2c4d0111Ab40bdB414daeE2e3F53c8e2f7254Ec`) // fake DAI (call mint to receive 1 DAI)
         }
 
+
+        if (chainid === '43113') { // fuji TESTNET
+            _lwm.addCurrency('0x5425890298aed601595a70ab815c96711a31bc65') // usdc
+            _lwm.addCurrency('0x9983f755bbd60d1886cbfe103c98c272aa0f03d6') // dexalot 
+        }
         // _lwm.addNFT(await factory.mintingAddress())
         // console.log(`minting address: ${await factory.mintingAddress()}`)
         return _lwm
