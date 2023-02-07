@@ -211,7 +211,18 @@ export default class LamportWalletManager {
             _lwm.addNFT(`0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB`) // Cryptopunks 
             _lwm.addNFT(`0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85`) // Ethereum Name Service
 
-            _lwm.addCurrency(``)
+            _lwm.addCurrency(`0x6b175474e89094c44da98b954eedeac495271d0f`) // Dai
+            _lwm.addCurrency(`0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2`) // maker
+            _lwm.addCurrency(`0xB8c77482e45F1F44dE1745F52C74426C631bDD52`) // BNB
+            _lwm.addCurrency(`0x4fabb145d64652a948d72533023f6e7a623c7c53`) // Binance USD
+            _lwm.addCurrency(`0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0`) // Matic
+            _lwm.addCurrency(`0xae7ab96520de3a18e5e111b5eaab095312d7fe84`) // stETH
+            _lwm.addCurrency(`0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE`) // Shiba Inu
+            _lwm.addCurrency(`0x1f9840a85d5af5bf1d1762f925bdaddc4201f984`) // Uniswap
+            _lwm.addCurrency(`0x4d224452801aced8b2f0aebe155379bb5d594381`) // ApeCoin
+            _lwm.addCurrency(`0x111111111117dc0aa78b770fa6a738034120c302`) // 1inch
+            _lwm.addCurrency(`0x93ed3fbe21207ec2e8f2d3c3de6e058cb73bc04d`) // Pinakion (Kleros Court)
+
         }
 
 
