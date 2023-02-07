@@ -240,6 +240,10 @@ export default class LamportWalletManager {
         if (chainid === '1285') { // moonriver
             _lwm.addNFT(`0x5bae38bfb57f0e77f244ac3edcbc91bf94ccd185`) // next gens
             _lwm.addNFT(`0xc433f820467107bc5176b95f3a58248c4332f8de`) // next gems  
+
+            _lwm.addCurrency('0x80a16016cc4a2e6a2caca8a4a498b1699ff0f844') // dai
+            _lwm.addCurrency('0x98878b06940ae243284ca214f92bb71a2b032b8a') // wrapped moonriver
+            _lwm.addCurrency('0x6bd193ee6d2104f14f94e2ca6efefae561a4334b') // SolarBeam 
         }
 
         if (chainid === '100') { // GNOSIS
