@@ -74,12 +74,19 @@ export const hash_b = (input: string) => ethers.utils.keccak256(input)
  * @param pub 
  * @returns a boolean : true upon successful verification, false otherwise
  */
-export function verify_signed_hash(hmsg: string, sig: Sig, pub: PubPair[]): boolean {
+export function verify_signed_hash(hmsg: string, _sig: Sig, pub: PubPair[]): boolean {
     const msg_hash_bin = new BigNumber(hmsg, 16).toString(2).padStart(256, '0')
     const pub_selection = ([...msg_hash_bin] as ('0' | '1')[]).map((way /** 'way' as in which way should we go through the public key */: '0' | '1', i: number) => pub[i][way])
 
+    const sig = _sig.map((element: string) => {
+        if (element.startsWith('0x'))
+            return element
+        return `0x${element}`
+    })
+
     for (let i = 0; i < pub_selection.length; i++)
-        if (pub_selection[i] !== hash_b(`0x${sig[i]}`))
+        // if (pub_selection[i] !== hash_b(`0x${sig[i]}`))
+        if (pub_selection[i] !== hash_b(sig[i]))
             return false
 
     return true
@@ -170,17 +177,17 @@ export { pubFromPri }
 //     return { pri, pub, secret }
 // }
 
-function experimental_mk_key_pair  () {
+function experimental_mk_key_pair() {
     // FOR EASY READING
-    const COMBINE = (a : string, b : string) => ethers.utils.solidityPack(['uint256', 'uint256'], [a, b])
-    const HASH = (a : string) => ethers.utils.keccak256(a)
-    const GENERATE_INITIAL_SECRET = () => ethers.utils.keccak256( ethers.utils.toUtf8Bytes (ethers.BigNumber.from(ethers.utils.randomBytes(32)).toHexString()))
+    const COMBINE = (a: string, b: string) => ethers.utils.solidityPack(['uint256', 'uint256'], [a, b])
+    const HASH = (a: string) => ethers.utils.keccak256(a)
+    const GENERATE_INITIAL_SECRET = () => ethers.utils.keccak256(ethers.utils.toUtf8Bytes(ethers.BigNumber.from(ethers.utils.randomBytes(32)).toHexString()))
 
     // generate single 32 bytes secret
     const secret: string = GENERATE_INITIAL_SECRET()
 
     // derive 512 intermediate secrets
-    const intermediate_secrets: string[] = Array.from({ length: 512 }).map((_, index : number) => HASH(COMBINE(secret, index.toString())))
+    const intermediate_secrets: string[] = Array.from({ length: 512 }).map((_, index: number) => HASH(COMBINE(secret, index.toString())))
 
     // pair them up
     const leftIntermediateSecrets: string[] = intermediate_secrets.filter((_, i) => i % 2 === 0)

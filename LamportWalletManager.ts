@@ -111,6 +111,18 @@ type State = {
     tx_hashes: string[]
 }
 
+type GasInfo = {
+   gasLimit: ethers.BigNumber | null, 
+   gasPrice: ethers.BigNumber | null,
+   type: "MANUAL" | "AUTO" | "UNSPECIFIED"
+}
+
+const defaultGasInfo: GasInfo = {
+    gasLimit: null,
+    gasPrice: null,
+    type: "UNSPECIFIED"
+}
+
 /**
  * @name LamportWalletManager
  * @description A class to manage all the logic for the lamport wallet interactions
@@ -156,7 +168,7 @@ export default class LamportWalletManager {
      * @date November 23rd 2022
      * @author William Doyle 
      */
-    static async _buyNew(signer: ethers.Signer | ethers.Wallet, blockchain: string): Promise<LamportWalletManager> {
+    static async _buyNew(signer: ethers.Signer | ethers.Wallet, blockchain: string, gasInfo : GasInfo ): Promise<LamportWalletManager> {
         const {
             factoryAddress,
             rpc,
@@ -176,11 +188,46 @@ export default class LamportWalletManager {
         // const gasLimit = await factory.estimateGas.createWalletEther(eip1271Wallet.address, kt.pkh,)
         // const gasPrice = await signer.getGasPrice()
 
-        const tx = await factory.createWalletEther(eip1271Wallet.address, kt.pkh, {
-            value: ethers.utils.parseEther(price.toString()),
-            // gasLimit: gasLimit,
-            // gasPrice: gasPrice
-        })
+        // const tx = await factory.createWalletEther(eip1271Wallet.address, kt.pkh, {
+        //     value: ethers.utils.parseEther(price.toString()),
+        //     // gasLimit: gasLimit,
+        //     // gasPrice: gasPrice
+        // })
+        const tx = await (async () => {
+            switch (gasInfo.type) {
+                case "MANUAL":
+                    {
+                        // ensure limits are not null
+                        if (!gasInfo.gasLimit || !gasInfo.gasPrice)
+                            throw new Error(`buyNew:: Manual Gas Limit and Gas Price must be specified if gasInfo.type === "MANUAL"`)
+
+                        return await factory.createWalletEther(eip1271Wallet.address, kt.pkh, {
+                            value: ethers.utils.parseEther(price.toString()),
+                            gasLimit: gasInfo.gasLimit,
+                            gasPrice: gasInfo.gasPrice
+                        })
+                    }
+                case "AUTO":
+                    {
+                        const gasLimit = await factory.estimateGas.createWalletEther(eip1271Wallet.address, kt.pkh,)
+                        const gasPrice = await signer.getGasPrice()
+
+                        return await factory.createWalletEther(eip1271Wallet.address, kt.pkh, {
+                            value: ethers.utils.parseEther(price.toString()),
+                            gasLimit: gasLimit,
+                            gasPrice: gasPrice
+                        })
+                    }
+                case "UNSPECIFIED":
+                    {
+                        return await factory.createWalletEther(eip1271Wallet.address, kt.pkh, {
+                            value: ethers.utils.parseEther(price.toString()),
+                        })
+                    }
+                default:
+                    throw new Error(`buyNew:: Unsupported GasInfo Type ${gasInfo.type} expected "MANUAL" | "AUTO" | "UNSPECIFIED"`)
+            }
+        })()
 
         const event = (await tx.wait()).events.find((e: any) => e.event === "WalletCreated")
         const walletAddress = event.args.walletAddress
@@ -270,7 +317,6 @@ export default class LamportWalletManager {
             _lwm.addCurrency('0xbf5140a22578168fd562dccf235e5d43a02ce9b1') // uniswap peg
             _lwm.addCurrency('0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c') // bitcoin peg
             _lwm.addCurrency('0x5f0da599bb2cccfcf6fdfd7d81743b6020864350') // maker peg 
-        
         }
 
         if (chainid === '80001') { // mumbai TESTNET
@@ -297,7 +343,7 @@ export default class LamportWalletManager {
      * @date November 4th 2022
      * @author William Doyle
      */
-    static async buyNew(gasPrivateKey: string, blockchain: string): Promise<LamportWalletManager> {
+    static async buyNew(gasPrivateKey: string, blockchain: string, gasInfo : GasInfo = defaultGasInfo): Promise<LamportWalletManager> {
         const {
             factoryAddress,
             rpc,
@@ -312,7 +358,7 @@ export default class LamportWalletManager {
 
         const provider = ethers.getDefaultProvider(rpc)
         const gasWallet = new ethers.Wallet(gasPrivateKey, provider)
-        return LamportWalletManager._buyNew(gasWallet, blockchain)
+        return LamportWalletManager._buyNew(gasWallet, blockchain, gasInfo)
     }
 
     /**
@@ -321,8 +367,8 @@ export default class LamportWalletManager {
      * @date November 23rd 2022
      * @author William Doyle 
      */
-    static async buyNew_mm(signer: ethers.Signer, blockchain: string): Promise<LamportWalletManager> {
-        return LamportWalletManager._buyNew(signer, blockchain)
+    static async buyNew_mm(signer: ethers.Signer, blockchain: string,  gasInfo : GasInfo = defaultGasInfo): Promise<LamportWalletManager> {
+        return LamportWalletManager._buyNew(signer, blockchain, gasInfo)
     }
 
     /**

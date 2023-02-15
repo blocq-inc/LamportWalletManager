@@ -38,7 +38,12 @@ const packPublicKeyHashes = (publicKeyHashes: string[]) => new Monad(ethers.util
 const keysToKeyHashes = (keyPairs: KeyPair[]) => new Monad(keyPairs.map(kp => KeyTracker.pkhFromPublicKey(kp.pub)))
 const hashBWithMonad = (data: string) => new Monad(hash_b(data))
 const signHashWithMonadAndCurry = (privateKey: RandPair[]) => (hashToSign: string) => new Monad(sign_hash(hashToSign, privateKey))
-const convertSignatureForSolidity = (signature: string[]) => new Monad(signature.map(s => `0x${s}`))
+// const convertSignatureForSolidity = (signature: string[]) => new Monad(signature.map(s => `0x${s}`))
+const convertSignatureForSolidity = (signature: string[]) => new Monad(signature.map((s: string) => {
+    if (s.startsWith('0x'))
+        return s
+    return `0x${s}`
+}))
 const packAddressAndUint256 = (input: [string, string]) => new Monad(ethers.utils.solidityPack(['address', 'uint256'], input))
 const checkSignature = (publicKey: PubPair[]) => (hashToSign: string) => (signature: Sig) => {
     const isValid = verify_signed_hash(hashToSign, signature, publicKey)
@@ -52,8 +57,9 @@ const packAddress = (input: string) => new Monad(ethers.utils.solidityPack(['add
 const packUint256 = (input: string) => new Monad(ethers.utils.solidityPack(['uint256'], [input]))
 const packAddressAndAddress = (input: string[]) => new Monad(ethers.utils.solidityPack(['address', 'address'], input))
 const packUint256AndAddress = (input: string[]) => new Monad(ethers.utils.solidityPack(['uint256', 'address'], input))
+const packBytes32Uint256AndBytes32 = (input: string[]) => new Monad(ethers.utils.solidityPack(['bytes32', 'uint256', 'bytes32'], input))
 
-export { 
+export {
     hashBWithMonad,
     checkSignature,
     keysToKeyHashes,
