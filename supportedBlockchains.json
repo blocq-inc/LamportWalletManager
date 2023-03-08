@@ -1,62 +1,62 @@
 [
     {
+        "name": "ethereum",
+        "factoryAddress": "0x5D58355AeFa81AAD5672dd39d6D8C73fDbA237a9",
+        "rpc": "https://1rpc.io/eth",
+        "chainid": "1",
+        "price": "0.1",
+        "explorer": "https://etherscan.io/",
+        "isTestnet": false,
+        "currencyTicker": "ETH"
+    },
+    {
         "name": "polygon",
         "factoryAddress": "0x6eaE729F136Fa64833Ef40bcECeBfD6442F00659",
         "rpc": "https://polygon-rpc.com/",
         "chainid": "137",
         "price": "0.1",
         "explorer": "https://polygonscan.com/",
-        "isTestnet":false,
+        "isTestnet": false,
         "currencyTicker": "MATIC"
     },
     {
-        "name": "ethereum",
-        "factoryAddress": "0x5D58355AeFa81AAD5672dd39d6D8C73fDbA237a9",
-        "rpc":"https://1rpc.io/eth",
-        "chainid": "1",
-        "price": "0.1",
-        "explorer": "https://etherscan.io/",
-        "isTestnet":false,
-        "currencyTicker": "ETH"
-    }, 
-    {
-        "name":"avalanche",
-        "factoryAddress":"0x47425b57e18c139343f3fed1c2b840d9e010070b",
+        "name": "avalanche",
+        "factoryAddress": "0x47425b57e18c139343f3fed1c2b840d9e010070b",
         "rpc": "https://api.avax.network/ext/bc/C/rpc",
         "chainid": "43114",
         "price": "0.1",
         "explorer": "https://snowtrace.io/",
-        "isTestnet":false,
+        "isTestnet": false,
         "currencyTicker": "AVAX"
     },
     {
-        "name":"moonriver",
-        "factoryAddress":"0xD3987e3774624327901FdD1F062Df9949211991e",
-        "rpc":"https://rpc.api.moonriver.moonbeam.network",
+        "name": "moonriver",
+        "factoryAddress": "0xD3987e3774624327901FdD1F062Df9949211991e",
+        "rpc": "https://rpc.api.moonriver.moonbeam.network",
         "chainid": "1285",
         "price": "1",
         "explorer": "https://moonriver.moonscan.io/",
-        "isTestnet":false,
+        "isTestnet": false,
         "currencyTicker": "MOVR"
     },
     {
-        "name":"binance_smart_chain",
-        "factoryAddress":"0x1c7671740A8d0E18F431557c73c98EA36D8b9bc0",
-        "rpc":"https://bsc-dataseed.binance.org",
+        "name": "binance_smart_chain",
+        "factoryAddress": "0x1c7671740A8d0E18F431557c73c98EA36D8b9bc0",
+        "rpc": "https://bsc-dataseed.binance.org",
         "chainid": "56",
         "price": "0.04",
         "explorer": "https://bscscan.com/",
-        "isTestnet":false,
+        "isTestnet": false,
         "currencyTicker": "BNB"
     },
     {
-        "name":"gnosis",
-        "factoryAddress":"0x47425b57e18c139343f3fed1c2b840d9e010070b",
-        "rpc":"https://xdai-rpc.gateway.pokt.network",
+        "name": "gnosis",
+        "factoryAddress": "0x47425b57e18c139343f3fed1c2b840d9e010070b",
+        "rpc": "https://xdai-rpc.gateway.pokt.network",
         "chainid": "100",
         "price": "0.1",
         "explorer": "https://gnosisscan.io/",
-        "isTestnet":false,
+        "isTestnet": false,
         "currencyTicker": "xDai"
     },
     {
@@ -66,7 +66,7 @@
         "chainid": "11155111",
         "price": "0.01",
         "explorer": "https://sepolia.etherscan.io/",
-        "isTestnet":true,
+        "isTestnet": true,
         "currencyTicker": "SEPOL"
     },
     {
@@ -76,7 +76,7 @@
         "chainid": "1287",
         "price": "0.01",
         "explorer": "https://moonbase.moonscan.io/",
-        "isTestnet":true,
+        "isTestnet": true,
         "currencyTicker": "DEV"
     },
     {
@@ -85,18 +85,18 @@
         "rpc": "https://matic-mumbai.chainstacklabs.com",
         "chainid": "80001",
         "price": "0.01",
-        "explorer":"https://mumbai.polygonscan.com/",
-        "isTestnet":true,
+        "explorer": "https://mumbai.polygonscan.com/",
+        "isTestnet": true,
         "currencyTicker": "TestMATIC"
     },
     {
-        "name":"fuji",
-        "factoryAddress":"0xD3987e3774624327901FdD1F062Df9949211991e",
-        "rpc":"https://api.avax-test.network/ext/bc/C/rpc",
+        "name": "fuji",
+        "factoryAddress": "0xD3987e3774624327901FdD1F062Df9949211991e",
+        "rpc": "https://api.avax-test.network/ext/bc/C/rpc",
         "chainid": "43113",
         "price": "0.01",
         "explorer": "https://testnet.snowtrace.io/",
-        "isTestnet":true,
+        "isTestnet": true,
         "currencyTicker": "TestAVAX"
     }
 ]
