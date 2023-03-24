@@ -1,4 +1,4 @@
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import KeyTracker from './KeyTracker'
 import supportedBlockchains from './supportedBlockchains.json'
 import factoryabi from './abi/factoryabi.json'
@@ -112,9 +112,9 @@ type State = {
 }
 
 type GasInfo = {
-   gasLimit: ethers.BigNumber | null, 
-   gasPrice: ethers.BigNumber | null,
-   type: "MANUAL" | "AUTO" | "UNSPECIFIED"
+    gasLimit: ethers.BigNumber | null,
+    gasPrice: ethers.BigNumber | null,
+    type: "MANUAL" | "AUTO" | "UNSPECIFIED"
 }
 
 const defaultGasInfo: GasInfo = {
@@ -168,7 +168,7 @@ export default class LamportWalletManager {
      * @date November 23rd 2022
      * @author William Doyle 
      */
-    static async _buyNew(signer: ethers.Signer | ethers.Wallet, blockchain: string, gasInfo : GasInfo ): Promise<LamportWalletManager> {
+    static async _buyNew(signer: ethers.Signer | ethers.Wallet, blockchain: string, gasInfo: GasInfo): Promise<LamportWalletManager> {
         const {
             factoryAddress,
             rpc,
@@ -343,7 +343,7 @@ export default class LamportWalletManager {
      * @date November 4th 2022
      * @author William Doyle
      */
-    static async buyNew(gasPrivateKey: string, blockchain: string, gasInfo : GasInfo = defaultGasInfo): Promise<LamportWalletManager> {
+    static async buyNew(gasPrivateKey: string, blockchain: string, gasInfo: GasInfo = defaultGasInfo): Promise<LamportWalletManager> {
         const {
             factoryAddress,
             rpc,
@@ -367,8 +367,19 @@ export default class LamportWalletManager {
      * @date November 23rd 2022
      * @author William Doyle 
      */
-    static async buyNew_mm(signer: ethers.Signer, blockchain: string,  gasInfo : GasInfo = defaultGasInfo): Promise<LamportWalletManager> {
-        return LamportWalletManager._buyNew(signer, blockchain, gasInfo)
+    static async buyNew_mm(signer: ethers.Signer, blockchain: string, gasInfo: GasInfo = defaultGasInfo): Promise<LamportWalletManager> {
+        const _gas = await (async () => {
+            console.log(`stub (A) blockchian: "${blockchain}"`)
+            if (blockchain === 'ethereum')
+                return ({
+                    type: 'MANUAL',
+                    gasPrice: await signer.getGasPrice(),
+                    // gasLimit: BigNumber.from('100000000000000000')
+                    gasLimit: BigNumber.from('100000')
+                } as GasInfo)
+                return gasInfo
+        })()
+        return LamportWalletManager._buyNew(signer, blockchain, _gas)
     }
 
     /**
