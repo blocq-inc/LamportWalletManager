@@ -1,5 +1,6 @@
 import { mk_key_pair } from "./functions"
 import { KeyPair } from "./types"
+import BaseKeyTracker from "./BaseKeyTracker"
 
 /**
  * @name KeyTrackerA
@@ -7,7 +8,7 @@ import { KeyPair } from "./types"
  * @date December 5th 2022
  * @author William Doyle
  */
-export default class KeyTrackerA {
+export default class KeyTrackerA extends BaseKeyTracker {
     keys: KeyPair[] = []
 
     get count() {

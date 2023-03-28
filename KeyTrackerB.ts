@@ -2,6 +2,7 @@
 
 // import { mk_key_pair } from "./functions"
 import { ethers } from "ethers"
+import BaseKeyTracker from "./BaseKeyTracker"
 import { hash, pubFromPri } from "./functions"
 import KeyTracker from "./KeyTracker"
 import { KeyPair, PubPair, RandPair } from "./types"
@@ -94,7 +95,7 @@ export function mk_compressed_key_pair(): AdvancedKeyPair {
  * @date Febuary 15th 2023
  * @author William Doyle
  */
-export default class KeyTrackerB {
+export default class KeyTrackerB extends BaseKeyTracker {
     keys: CompressedKeyPair[] = []
 
     get count() {

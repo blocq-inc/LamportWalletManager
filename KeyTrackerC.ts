@@ -6,6 +6,7 @@ import { hash, pubFromPri } from "./functions"
 import KeyTracker from "./KeyTracker"
 import { KeyPair, PubPair, RandPair } from "./types"
 import { type CompressedKeyPair, type AdvancedKeyPair } from "./KeyTrackerB"
+import BaseKeyTracker from "./BaseKeyTracker"
 
 // FOR EASY READING
 const COMBINE = (a: string, b: string) => ethers.utils.solidityPack(['uint256', 'uint256'], [a, b])
@@ -41,12 +42,13 @@ export function mk_compressed_key_pair_from_seed_and_nonce(seed: string, nonce: 
  * @date Febuary 15th 2023
  * @author William Doyle
  */
-export default class KeyTrackerC {
+export default class KeyTrackerC extends BaseKeyTracker {
     seed: string = ""
     nonce: number = 0 // number of keys generated
     _count: number = 0 // number of keys left
 
     constructor() {
+        super()
         this.seed = GENERATE_INITIAL_SECRET()
     }
 
