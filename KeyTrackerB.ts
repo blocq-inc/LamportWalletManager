@@ -58,7 +58,7 @@ export function uncompressLamport(compressed: CompressedKeyPair): AdvancedKeyPai
  * @date Febuary 15th 2023
  * @author William Doyle 
  */
-export function compressLamport (keyPair: AdvancedKeyPair): CompressedKeyPair {
+export function compressLamport(keyPair: AdvancedKeyPair): CompressedKeyPair {
     return {
         secret: keyPair.secret,
         pkh: keyPair.pkh
@@ -102,7 +102,11 @@ export default class KeyTrackerB extends BaseKeyTracker {
         return this.keys.length
     }
 
-    more(amount: number = 2) : AdvancedKeyPair[] {
+    get exhausted(): boolean {
+        return this.count === 0
+    }
+
+    more(amount: number = 2): AdvancedKeyPair[] {
         const keys = Array.from({ length: amount }, () => mk_compressed_key_pair())
         const asCompressed = keys.map(k => compressLamport(k))
         this.keys.push(...asCompressed) // save as compressed

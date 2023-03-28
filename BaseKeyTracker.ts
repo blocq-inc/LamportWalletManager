@@ -9,6 +9,7 @@ import { KeyPair, PubPair } from "./types";
  */
 export default abstract class BaseKeyTracker {
     abstract get count(): number;
+    abstract get exhausted(): boolean;
     abstract more(amount: number): KeyPair[];
     abstract getOne(): KeyPair; 
     abstract getN(amount: number): KeyPair[];

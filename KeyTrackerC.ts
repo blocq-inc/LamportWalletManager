@@ -56,6 +56,10 @@ export default class KeyTrackerC extends BaseKeyTracker {
         return this._count
     }
 
+    get exhausted() {
+        return this.count === 0
+    }
+
     more(amount: number = 2): AdvancedKeyPair[] {
         const keys = Array.from({ length: amount }, () => {
             const rval = mk_compressed_key_pair_from_seed_and_nonce(this.seed, this.nonce.toString())
