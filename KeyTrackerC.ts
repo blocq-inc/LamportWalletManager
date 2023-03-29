@@ -3,7 +3,6 @@
 // import { mk_key_pair } from "./functions"
 import { ethers } from "ethers"
 import { hash, pubFromPri } from "./functions"
-import KeyTracker from "./KeyTracker"
 import { KeyPair, PubPair, RandPair } from "./types"
 import { type CompressedKeyPair, type AdvancedKeyPair } from "./KeyTrackerB"
 import BaseKeyTracker from "./BaseKeyTracker"
@@ -27,7 +26,7 @@ export function mk_compressed_key_pair_from_seed_and_nonce(seed: string, nonce: 
     // derive public key
     const pub: PubPair[] = pubFromPri(pri.map(p => [p[0], p[1]]))
     // derive hash of public key
-    const pkh = KeyTracker.pkhFromPublicKey(pub)
+    const pkh = BaseKeyTracker.pkhFromPublicKey(pub)
     return {
         pri,
         pub,

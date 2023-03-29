@@ -17,6 +17,7 @@ import BaseKeyTracker from './BaseKeyTracker'
 import KeyTrackerA from './KeyTrackerA'
 import KeyTrackerB from './KeyTrackerB'
 import KeyTrackerC from './KeyTrackerC'
+import MultiSourceKeyTracker from './MultiSourceKeyTracker'
 
 const keyTrackers : BaseKeyTracker[] = [
     new KeyTrackerA(),
@@ -33,5 +34,13 @@ keyTrackers.forEach((keyTracker, index) => keyTracker.more(10))
 showCounts()
 
 
+const mskt  = new MultiSourceKeyTracker()
+mskt.moreTypeA(10)
+mskt.moreTypeB(10)
+mskt.moreTypeC(10)
+console.log(`mskt.count --> ${mskt.count}`)
+
+keyTrackers.push(mskt)
+showCounts()
 
 

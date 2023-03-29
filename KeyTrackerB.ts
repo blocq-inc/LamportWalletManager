@@ -4,7 +4,6 @@
 import { ethers } from "ethers"
 import BaseKeyTracker from "./BaseKeyTracker"
 import { hash, pubFromPri } from "./functions"
-import KeyTracker from "./KeyTracker"
 import { KeyPair, PubPair, RandPair } from "./types"
 
 export type CompressedKeyPair = {
@@ -39,7 +38,7 @@ export function uncompressLamport(compressed: CompressedKeyPair): AdvancedKeyPai
     // 3. derive public key
     const pub: PubPair[] = pubFromPri(pri.map(p => [p[0], p[1]]))
     // 4. derive hash of public key
-    const pkh = KeyTracker.pkhFromPublicKey(pub)
+    const pkh = BaseKeyTracker.pkhFromPublicKey(pub)
     // 5. verify hash matches
     if (pkh !== compressed.pkh)
         throw new Error('Public Key Hash Does Not Match Secret')
@@ -80,7 +79,7 @@ export function mk_compressed_key_pair(): AdvancedKeyPair {
     // derive public key
     const pub: PubPair[] = pubFromPri(pri.map(p => [p[0], p[1]]))
     // derive hash of public key
-    const pkh = KeyTracker.pkhFromPublicKey(pub)
+    const pkh = BaseKeyTracker.pkhFromPublicKey(pub)
     return {
         pri,
         pub,
