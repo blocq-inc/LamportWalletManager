@@ -60,6 +60,16 @@
         "currencyTicker": "xDai"
     },
     {
+        "name":"bitgert",
+        "factoryAddress":"0x34A86B3B9523d2d19Bbf199329983c802B3D4760",
+        "rpc":"https://nodes.vefinetwork.org/bitgert",
+        "chainid":"32520",
+        "price":"0.1",
+        "explorer":"https://brisescan.com",
+        "isTestnet":false,
+        "currencyTicker":"Brise"
+    },
+    {
         "name": "sepolia",
         "factoryAddress": "0x2E426DAa332FB9A068F2eAb30932f55a6af9d28f",
         "rpc": "https://rpc2.sepolia.org",
