@@ -65,7 +65,7 @@
         "rpc":"https://nodes.vefinetwork.org/bitgert",
         "chainid":"32520",
         "price":"0.1",
-        "explorer":"https://brisescan.com",
+        "explorer":"https://brisescan.com/",
         "isTestnet":false,
         "currencyTicker":"Brise"
     },
