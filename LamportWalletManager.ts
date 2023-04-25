@@ -5,6 +5,8 @@ import factoryabi from './abi/factoryabi.json'
 import walletabi from './abi/walletabi.json'
 import erc20abi from './abi/erc20abi.json'
 import erc721abi from './abi/erc721abi.json'
+import kittyabi from './abi/kittyabi.json'
+
 import { LamportKeyPair, KeyPair, PubPair } from './types'
 import { hash_b, mk_key_pair, sign_hash, verify_signed_hash, } from './functions'
 
@@ -65,7 +67,8 @@ function lamport_getCurrentAndNextKeyData(k: KeyTracker): ({
  * @author William Doyle 
  * @date October 25th 2022
  */
-function buildCallData(abi: any, functionSignature: string, args: any[], address: string, value: string = '0', gas: string = '100000'): string {
+// function buildCallData(abi: any, functionSignature: string, args: any[], address: string, value: string = '0', gas: string = '100000'): string {
+function buildCallData(abi: any, functionSignature: string, args: any[], address: string, value: string = '0', gas: string = '1000000'): string {
     const encoder: ethers.utils.AbiCoder = new ethers.utils.AbiCoder()
     const iface = new ethers.utils.Interface(abi)
     const _funSig = iface.encodeFunctionData(functionSignature, args)
@@ -78,7 +81,9 @@ function buildCallData(abi: any, functionSignature: string, args: any[], address
  * @description
  * @author William Doyle
  */
-function buildExecuteArguments(k: KeyTracker, functionName: string, abi: any, address: string, args: any[], value: string = '0', gas: string = '100000'): any[] {
+// function buildExecuteArguments(k: KeyTracker, functionName: string, abi: any, address: string, args: any[], value: string = '0', gas: string = '100000'): any[] {
+function buildExecuteArguments(k: KeyTracker, functionName: string, abi: any, address: string, args: any[], value: string = '0', gas: string = '1000000'): any[] {
+    console.log("--APRIL25th2023".repeat(200))
     const { current_keys, next_keys, nextpkh, currentpkh } = lamport_getCurrentAndNextKeyData(k)
     const _data = buildCallData(abi, functionName, args, address, value, gas)
     const packed = ethers.utils.solidityPack(['bytes', 'bytes32'], [_data, nextpkh])
@@ -563,15 +568,18 @@ export default class LamportWalletManager {
      * @author William Doyle
      */
     async call_execute(_contractAddress: string, fsig: string, args: string[], abi: any): Promise<WaiterCallback> {
+        console.log(`STUB::call_execute`)
         const contractAddress = this.nameOrAddressToAddress(_contractAddress)
         const gasWallet = await this.getGasPayer()
 
         const lamportwallet: ethers.Contract = new ethers.Contract(this.state.walletAddress, walletabi, gasWallet)
 
-        const executionArguments = buildExecuteArguments(this.state.kt, fsig, abi, contractAddress, args)
-        const gasLimit = lamportwallet.estimateGas.execute(...executionArguments)
+        const executionArguments = buildExecuteArguments(this.state.kt, fsig, abi, contractAddress, args )
+        console.log(`executionArguments: ${JSON.stringify(executionArguments)}`)
+        // const gasLimit = lamportwallet.estimateGas.execute(...executionArguments)
+        // const gasLimit = 1552511 * 10 // ten times the gas used in a call i found on etherscan 
+        const gasLimit = 1552511 //* 3 // ten times the gas used in a call i found on etherscan 
         const gasPrice = gasWallet.getGasPrice()
-
 
         const tx = await lamportwallet.execute(...executionArguments, {
             gasLimit: gasLimit,
@@ -696,8 +704,20 @@ export default class LamportWalletManager {
      * @author William Doyle
      */
     async transferNft(_nftAddress: string, tokenId: string, _toAddress: string): Promise<WaiterCallback> {
+        const kittyLike = [
+            '0x8cDBF8AECE3c9FE930Be0a1D769464E382c47E7E'.toLowerCase(),
+            '0x06012c8cf97BEaD5deAe237070F9587f8E7A266d'.toLowerCase(),
+        ] // these contracts are weird
+
+        console.log(`STUB: transferNft(${_nftAddress}, ${tokenId}, ${_toAddress})`)
+
         const nftAddress = this.nameOrAddressToAddress(_nftAddress)
         const toAddress = this.nameOrAddressToAddress(_toAddress)
+
+        if (kittyLike.includes(_nftAddress.toLowerCase())) {
+            console.log("STUB: it appears you are trying to transfer a cryptokitty. We use a sepeate function for this")
+            return this.call_execute(nftAddress, 'transfer(address,uint256)', [toAddress, tokenId], kittyabi)
+        }
         return this.call_execute(nftAddress, 'transferFrom(address,address,uint256)', [this.state.walletAddress, toAddress, tokenId], erc721abi)
     }
 

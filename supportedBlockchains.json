@@ -1,15 +1,5 @@
 [
     {
-        "name": "polygon",
-        "factoryAddress": "0x6eaE729F136Fa64833Ef40bcECeBfD6442F00659",
-        "rpc": "https://polygon-rpc.com/",
-        "chainid": "137",
-        "price": "0.1",
-        "explorer": "https://polygonscan.com/",
-        "isTestnet": false,
-        "currencyTicker": "MATIC"
-    },
-    {
         "name": "ethereum",
         "factoryAddress": "0x5D58355AeFa81AAD5672dd39d6D8C73fDbA237a9",
         "rpc": "https://1rpc.io/eth",
@@ -18,6 +8,16 @@
         "explorer": "https://etherscan.io/",
         "isTestnet": false,
         "currencyTicker": "ETH"
+    },
+    {
+        "name": "polygon",
+        "factoryAddress": "0x6eaE729F136Fa64833Ef40bcECeBfD6442F00659",
+        "rpc": "https://polygon-rpc.com/",
+        "chainid": "137",
+        "price": "0.1",
+        "explorer": "https://polygonscan.com/",
+        "isTestnet": false,
+        "currencyTicker": "MATIC"
     },
     {
         "name": "avalanche",
@@ -60,14 +60,14 @@
         "currencyTicker": "xDai"
     },
     {
-        "name":"bitgert",
-        "factoryAddress":"0x34A86B3B9523d2d19Bbf199329983c802B3D4760",
-        "rpc":"https://nodes.vefinetwork.org/bitgert",
-        "chainid":"32520",
-        "price":"0.1",
-        "explorer":"https://brisescan.com/",
-        "isTestnet":false,
-        "currencyTicker":"Brise"
+        "name": "bitgert",
+        "factoryAddress": "0x34A86B3B9523d2d19Bbf199329983c802B3D4760",
+        "rpc": "https://nodes.vefinetwork.org/bitgert",
+        "chainid": "32520",
+        "price": "0.1",
+        "explorer": "https://brisescan.com/",
+        "isTestnet": false,
+        "currencyTicker": "Brise"
     },
     {
         "name": "sepolia",
