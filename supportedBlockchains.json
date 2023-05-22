@@ -62,7 +62,7 @@
     {
         "name": "bitgert",
         "factoryAddress": "0x34A86B3B9523d2d19Bbf199329983c802B3D4760",
-        "rpc": "https://nodes.vefinetwork.org/bitgert",
+        "rpc": "https://serverrpc.com",
         "chainid": "32520",
         "price": "0.1",
         "explorer": "https://brisescan.com/",
@@ -91,10 +91,10 @@
     },
     {
         "name": "mumbai",
-        "factoryAddress": "0x102E396260C75543240ae063513A2Ef2b9AfC2D6",
+        "factoryAddress": "0xF505469Bf06fC1C8221d1Fab089ACF5BE8E8a487",
         "rpc": "https://matic-mumbai.chainstacklabs.com",
         "chainid": "80001",
-        "price": "0.01",
+        "price": "0.1",
         "explorer": "https://mumbai.polygonscan.com/",
         "isTestnet": true,
         "currencyTicker": "TestMATIC"

@@ -375,14 +375,15 @@ export default class LamportWalletManager {
     static async buyNew_mm(signer: ethers.Signer, blockchain: string, gasInfo: GasInfo = defaultGasInfo): Promise<LamportWalletManager> {
         const _gas = await (async () => {
             console.log(`stub (A) blockchian: "${blockchain}"`)
-            if (blockchain === 'ethereum')
-                return ({
-                    type: 'MANUAL',
-                    gasPrice: await signer.getGasPrice(),
-                    // gasLimit: BigNumber.from('100000000000000000')
-                    gasLimit: BigNumber.from('100000')
-                } as GasInfo)
-                return gasInfo
+            console.log(`stub (WDD May 22nd 2023) even if blockchain is 'ethereum' I'm returning undefined on purpose`)
+            // if (blockchain === 'ethereum')
+            //     return ({
+            //         type: 'MANUAL',
+            //         gasPrice: await signer.getGasPrice(),
+            //         // gasLimit: BigNumber.from('100000000000000000')
+            //         gasLimit: BigNumber.from('100000')
+            //     } as GasInfo)
+            return gasInfo
         })()
         return LamportWalletManager._buyNew(signer, blockchain, _gas)
     }
@@ -574,7 +575,7 @@ export default class LamportWalletManager {
 
         const lamportwallet: ethers.Contract = new ethers.Contract(this.state.walletAddress, walletabi, gasWallet)
 
-        const executionArguments = buildExecuteArguments(this.state.kt, fsig, abi, contractAddress, args )
+        const executionArguments = buildExecuteArguments(this.state.kt, fsig, abi, contractAddress, args)
         console.log(`executionArguments: ${JSON.stringify(executionArguments)}`)
         // const gasLimit = lamportwallet.estimateGas.execute(...executionArguments)
         // const gasLimit = 1552511 * 10 // ten times the gas used in a call i found on etherscan 
