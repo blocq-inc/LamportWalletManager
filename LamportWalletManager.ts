@@ -189,6 +189,19 @@ export default class LamportWalletManager {
         const eip1271Wallet = ethers.Wallet.createRandom()
 
         const kt: KeyTracker = new KeyTracker()
+       
+        
+        // Check gas wallet has enough to cover the cost of the wallet
+        const gasWalletBalance = await signer.getBalance()
+        const priceNumber = ethers.utils.parseEther(price)
+
+        console.log(`[stub::_buyNew] gasWalletBalance: ${gasWalletBalance.toString()}`)
+        console.log(`[stub::_buyNew] priceNumber: ${priceNumber.toString()}`)
+
+        if (gasWalletBalance.lt(priceNumber)) {
+            throw new Error(`LamportWalletManager::_buyNew:: EOA does not have enough funds to cover the cost of the wallet even before considering gas`)
+        }
+
 
         // const gasLimit = await factory.estimateGas.createWalletEther(eip1271Wallet.address, kt.pkh,)
         // const gasPrice = await signer.getGasPrice()
@@ -363,6 +376,8 @@ export default class LamportWalletManager {
 
         const provider = ethers.getDefaultProvider(rpc)
         const gasWallet = new ethers.Wallet(gasPrivateKey, provider)
+
+
         return LamportWalletManager._buyNew(gasWallet, blockchain, gasInfo)
     }
 
