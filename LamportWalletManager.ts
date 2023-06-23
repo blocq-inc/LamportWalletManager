@@ -268,6 +268,7 @@ export default class LamportWalletManager {
             _lwm.addCurrency(`0x3BA4c387f786bFEE076A58914F5Bd38d668B42c3`) // BNB
             _lwm.addCurrency(`0xd6df932a45c0f255f85145f286ea0b292b21c90b`) // Aave
             _lwm.addCurrency(`0x9c2c5fd7b07e95ee044ddeba0e97a665f142394f`) // 1inch
+            _lwm.addCurrency(`0x77f7A39f5C5E297A0E9dDd5BAcba44b12cc851b1`) // ThinAir
         }
 
         if (chainid === '1') { // ethereum
@@ -287,6 +288,7 @@ export default class LamportWalletManager {
             _lwm.addCurrency(`0x4d224452801aced8b2f0aebe155379bb5d594381`) // ApeCoin
             _lwm.addCurrency(`0x111111111117dc0aa78b770fa6a738034120c302`) // 1inch
             _lwm.addCurrency(`0x93ed3fbe21207ec2e8f2d3c3de6e058cb73bc04d`) // Pinakion (Kleros Court)
+            _lwm.addCurrency(`0x41Ac4CF951651ddc68ceD829710e3a44EA08Be53`) // ThinAir
 
         }
 

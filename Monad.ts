@@ -28,6 +28,10 @@ export default class Monad<T> {
         return transform(this._value);
     }
 
+    static of<T>(value: T): Monad<T> {
+        return new Monad(value);
+    }
+
     unwrap(): T {
         return JSON.parse(JSON.stringify(this._value)) as T;
     }
