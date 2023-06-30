@@ -72,7 +72,7 @@
     {
         "name": "sepolia",
         "factoryAddress": "0x2E426DAa332FB9A068F2eAb30932f55a6af9d28f",
-        "rpc": "https://rpc2.sepolia.org",
+        "rpc": "https://rpc.sepolia.org",
         "chainid": "11155111",
         "price": "0.01",
         "explorer": "https://sepolia.etherscan.io/",
